@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Third-party apps:
+    "jazzmin",
+    "rest_framework",
+
     # Build-in apps:
     "django.contrib.admin",
     "django.contrib.auth",
@@ -38,9 +42,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # Third-party apps:
-    "rest_framework",
 
     # Local apps:
     "accounts",

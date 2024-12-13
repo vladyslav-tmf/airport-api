@@ -1,4 +1,6 @@
-**/.idea
 **/*.pyc
+**/*.sqlite3
 **/__pycache__
+**/migrations
+**/.idea
 .venv
