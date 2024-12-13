@@ -36,6 +36,9 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
-    list_display = ("email", "first_name", "last_name", "is_staff")
+    list_display = ("email", "first_name", "last_name", "is_staff", "orders_count")
     search_fields = ("email", "first_name", "last_name")
     ordering = ("last_name", "first_name")
+
+    def orders_count(self, user):
+        return user.orders.count()
