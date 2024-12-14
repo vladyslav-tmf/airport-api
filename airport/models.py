@@ -40,6 +40,12 @@ class Airplane(models.Model):
 
     class Meta:
         ordering = ("airplane_type", "name")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("name", "airplane_type"),
+                name="unique_airplane_type_and_name",
+            )
+        ]
 
     def __str__(self):
         return f"{self.airplane_type.name} {self.name}"
@@ -88,7 +94,7 @@ class Route(models.Model):
             raise ValidationError({"distance": "Distance cannot exceed 20,000 km"})
 
     def __str__(self):
-        return f"Route: {self.source} - {self.destination}"
+        return f"{self.source.name} → {self.destination.name} ({self.distance} km)"
 
 
 class Flight(models.Model):
@@ -114,7 +120,10 @@ class Flight(models.Model):
             raise ValidationError({"arrival_time": "Arrival time must be after departure time"})
 
     def __str__(self):
-        return self.route
+        return (
+            f"{self.route.source.name} ({self.departure_time.strftime("%Y.%m.%d %H:%M")}) → "
+            f"{self.route.destination.name} ({self.arrival_time.strftime("%Y.%m.%d %H:%M")})"
+        )
 
 
 class Order(models.Model):
@@ -127,7 +136,7 @@ class Order(models.Model):
         ordering = ("-created_at",)
 
     def __str__(self):
-        return f"Order {self.id} by {self.user.get_full_name()}"
+        return f"#{self.id} by {self.user.get_full_name()}"
 
 
 class Ticket(models.Model):
@@ -139,6 +148,10 @@ class Ticket(models.Model):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="tickets"
     )
+
+    @property
+    def seat_number(self):
+        return f"{self.row}-{self.seat}"
 
     class Meta:
         ordering = ("flight",)
@@ -162,4 +175,9 @@ class Ticket(models.Model):
             raise ValidationError({"flight": "Cannot create ticket for past flights"})
 
     def __str__(self):
-        return f"Ticket {self.flight.airplane}: {self.row}-{self.seat}"
+        return (
+            f"{self.flight.route.source.closest_big_city} → "
+            f"{self.flight.route.destination.closest_big_city} "
+            f"(Departure at {self.flight.departure_time.strftime("%Y.%m.%d %H:%M")}): "
+            f"seat {self.row}-{self.seat}"
+        )
