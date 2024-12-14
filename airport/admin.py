@@ -61,10 +61,16 @@ class FlightAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "created_at", "user", "tickets_count")
+    list_display = ("id", "created_at", "customer", "tickets_count")
     list_filter = ("created_at", "user")
     search_fields = ("user__email", "user__first_name", "user__last_name")
     date_hierarchy = "created_at"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("user")
+
+    def customer(self, order):
+        return f"{order.user.first_name} {order.user.last_name}"
 
     def tickets_count(self, order):
         return order.tickets.count()

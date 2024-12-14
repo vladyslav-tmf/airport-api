@@ -26,12 +26,14 @@ SECRET_KEY = "django-insecure-gg=h)nn&#wag_aagw#-+v-ml(^j#9h1t7+mlkqleve$il*6vug
 DEBUG = True
 
 ALLOWED_HOSTS = []
+INTERNAL_IPS = ["127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
     # Third-party apps:
+    "debug_toolbar",
     "jazzmin",
     "rest_framework",
 
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
