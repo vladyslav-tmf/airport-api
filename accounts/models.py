@@ -37,6 +37,13 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    """
+    Custom user model that uses email instead of username for authentication.
+
+    Extends Django's AbstractUser to create a custom user model that replaces
+    the default username fields with email as the unique identifier.
+    Requires first_name and last_name fields to be set.
+    """
     username = None
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255)

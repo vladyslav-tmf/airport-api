@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Serializer for the User model."""
     password = serializers.CharField(
         write_only=True,
         required=True,
@@ -17,11 +18,11 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "is_staff",)
 
     def create(self, validated_data):
-        """Create a new user with encrypted password and return it"""
+        """Create a new user with encrypted password and return it."""
         return get_user_model().objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
-        """Update a user, set the password correctly and return it"""
+        """Update a user, set the password correctly and return it."""
         password = validated_data.pop("password", None)
         user = super().update(instance, validated_data)
         if password:

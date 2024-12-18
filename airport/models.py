@@ -40,6 +40,7 @@ class Airplane(TimestampedUUIDBaseModel):
 
     @property
     def total_seats(self):
+        """Calculate total number of seats in the airplane."""
         return self.rows * self.seats_in_row
 
     class Meta:
@@ -61,6 +62,7 @@ class Crew(TimestampedUUIDBaseModel):
 
     @property
     def full_name(self):
+        """Get crew member's full name by combining first and last name."""
         return f"{self.first_name} {self.last_name}"
 
     class Meta:
@@ -114,6 +116,7 @@ class Flight(TimestampedUUIDBaseModel):
 
     @property
     def available_seats(self):
+        """Calculate number of available seats on the flight."""
         return self.airplane.total_seats - self.tickets.count()
 
     class Meta:
@@ -165,6 +168,7 @@ class Ticket(TimestampedUUIDBaseModel):
 
     @property
     def seat_number(self):
+        """Get formatted seat number string combining row and seat numbers."""
         return f"{self.row}-{self.seat}"
 
     class Meta:
@@ -178,6 +182,10 @@ class Ticket(TimestampedUUIDBaseModel):
 
     @staticmethod
     def validate_ticket(row, seat, airplane, error_to_raise):
+        """
+        Validate that ticket row and seat numbers are within
+        airplane's seating configuration.
+        """
         for ticket_attr_value, ticket_attr_name, airplane_attr_name in [
             (row, "row", "rows"),
             (seat, "seat", "seats_in_row"),

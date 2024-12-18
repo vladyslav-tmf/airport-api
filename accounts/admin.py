@@ -47,4 +47,5 @@ class UserAdmin(DjangoUserAdmin):
     ordering = ("last_name", "first_name")
 
     def orders_count(self, user):
+        """Return the total number of orders made by the user."""
         return user.orders.count()

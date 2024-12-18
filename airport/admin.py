@@ -69,12 +69,15 @@ class OrderAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
 
     def get_queryset(self, request):
+        """Optimize database queries by using select_related for the user field."""
         return super().get_queryset(request).select_related("user")
 
     def customer(self, order):
+        """Get customer full name by combining first and last name."""
         return f"{order.user.first_name} {order.user.last_name}"
 
     def tickets_count(self, order):
+        """Get total number of tickets in the order."""
         return order.tickets.count()
 
 
