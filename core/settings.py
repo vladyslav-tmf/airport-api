@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,6 +34,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 INSTALLED_APPS = [
     # Third-party apps:
     "debug_toolbar",
+    "drf_spectacular",
     "jazzmin",
     "rest_framework",
 
@@ -139,3 +140,45 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Django REST Framework configuration
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {"anon": "500/day", "user": "1000/day"},
+}
+
+# JSON Web Token configuration
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "UPDATE_LAST_LOGIN": True,
+}
+
+# API documentation configuration
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Airport API",
+    "DESCRIPTION": (
+        "🛫 Global Flight Tracking System - RESTful API service for real-time flight "
+        "monitoring and airport data management worldwide."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelExpandDepth": 3,
+        "defaultModelsExpandDepth": 3,
+        "persistAuthorization": True,
+    },
+}
