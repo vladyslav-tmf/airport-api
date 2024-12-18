@@ -4,13 +4,17 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        validators=[validate_password],
+        style={"input_type": "password"},
+    )
+
     class Meta:
         model = get_user_model()
-        fields = ("id", "email", "password", "is_staff")
+        fields = ("id", "email", "first_name", "last_name", "password", "is_staff")
         read_only_fields = ("id", "is_staff",)
-        extra_kwargs = {
-            "password": {"write_only": True, "validators": [validate_password]}
-        }
 
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""
