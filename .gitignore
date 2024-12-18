@@ -2,5 +2,5 @@
 **/*.pyc
 **/*.sqlite3
 **/__pycache__
-**/uploads
+**/media
 .venv

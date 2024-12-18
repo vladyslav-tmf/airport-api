@@ -176,20 +176,25 @@ class Ticket(TimestampedUUIDBaseModel):
             )
         ]
 
+    @staticmethod
+    def validate_ticket(row, seat, airplane, error_to_raise):
+        for ticket_attr_value, ticket_attr_name, airplane_attr_name in [
+            (row, "row", "rows"),
+            (seat, "seat", "seats_in_row"),
+        ]:
+            count_attrs = getattr(airplane, airplane_attr_name)
+            if not (1 <= ticket_attr_value <= count_attrs):
+                raise error_to_raise(
+                    {
+                        ticket_attr_name: (
+                            f"{ticket_attr_name} number must be in available range: "
+                            f"(1, {airplane_attr_name}): (1, {count_attrs})"
+                        )
+                    }
+                )
+
     def clean(self):
-        if self.row > self.flight.airplane.rows:
-            raise ValidationError(
-                {"row": f"Row number must be between 1 and {self.flight.airplane.rows}"}
-            )
-        if self.seat > self.flight.airplane.seats_in_row:
-            raise ValidationError(
-                {
-                    "seat": (
-                        "Row number must be between 1 and "
-                        f"{self.flight.airplane.seats_in_row}"
-                    )
-                }
-            )
+        self.validate_ticket(self.row, self.seat, self.flight.airplane, ValidationError)
         if self.flight.departure_time <= timezone.now():
             raise ValidationError({"flight": "Cannot create ticket for past flights"})
 
