@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
         "password": "pbkdf2_sha256$870000$2FlUBqigrMR5JrIJ1ijFaW$JnuqJswsaGkY/bLhx2hmZlls0cheyA6l2LKywgZMz/g=",
-        "last_login": "2024-12-18T13:15:14.211Z",
+        "last_login": "2024-12-18T13:29:38.821Z",
         "is_superuser": true,
         "is_staff": true,
         "is_active": true,
@@ -188,7 +188,8 @@
         "name": "UR-PSB",
         "rows": 28,
         "seats_in_row": 6,
-        "airplane_type": "e0a985a2-3d9e-4e2d-be95-947193b93bd0"
+        "airplane_type": "e0a985a2-3d9e-4e2d-be95-947193b93bd0",
+        "image": ""
     }
 },
 {
@@ -196,11 +197,12 @@
     "pk": "ba54fc64-2750-4d50-a1d0-be448fa71428",
     "fields": {
         "created_at": "2024-12-18T12:35:33.313Z",
-        "updated_at": "2024-12-18T12:35:33.313Z",
+        "updated_at": "2024-12-18T13:54:26.504Z",
         "name": "UR-PSD",
         "rows": 50,
         "seats_in_row": 10,
-        "airplane_type": "b8469385-ea2d-4259-aa3c-76d689e44f64"
+        "airplane_type": "b8469385-ea2d-4259-aa3c-76d689e44f64",
+        "image": "uploads/airplanes/ur-psd-50c51fa8-c87b-447c-bc3f-99da3ea46cd0.jpg"
     }
 },
 {
@@ -212,7 +214,8 @@
         "name": "UR-PSC",
         "rows": 40,
         "seats_in_row": 9,
-        "airplane_type": "2c4863dc-7140-4bc2-a26f-ecca7e472538"
+        "airplane_type": "2c4863dc-7140-4bc2-a26f-ecca7e472538",
+        "image": ""
     }
 },
 {
@@ -224,7 +227,8 @@
         "name": "UR-PSA",
         "rows": 30,
         "seats_in_row": 6,
-        "airplane_type": "f663fa0c-db28-44fd-93dc-1e57a98d2a81"
+        "airplane_type": "f663fa0c-db28-44fd-93dc-1e57a98d2a81",
+        "image": ""
     }
 },
 {
@@ -236,7 +240,8 @@
         "name": "UR-PSE",
         "rows": 35,
         "seats_in_row": 8,
-        "airplane_type": "2a60ab68-ecac-4f87-a0ef-1c3b3580aff6"
+        "airplane_type": "2a60ab68-ecac-4f87-a0ef-1c3b3580aff6",
+        "image": ""
     }
 },
 {

@@ -1,5 +1,6 @@
+**/.idea
 **/*.pyc
 **/*.sqlite3
-**/.idea
 **/__pycache__
+**/uploads
 .venv

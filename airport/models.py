@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils import timezone
 
+from airport.utils import airplane_image_file_path
 from common.models import TimestampedUUIDBaseModel
 
 
@@ -35,6 +36,7 @@ class Airplane(TimestampedUUIDBaseModel):
     airplane_type = models.ForeignKey(
         AirplaneType, on_delete=models.CASCADE, related_name="airplanes"
     )
+    image = models.ImageField(null=True, blank=True, upload_to=airplane_image_file_path)
 
     @property
     def total_seats(self):
