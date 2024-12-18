@@ -47,7 +47,9 @@ class RouteAdmin(admin.ModelAdmin):
 
 @admin.register(Flight)
 class FlightAdmin(admin.ModelAdmin):
-    list_display = ("route", "airplane", "departure_time", "arrival_time", "available_seats")
+    list_display = (
+        "route", "airplane", "departure_time", "arrival_time", "available_seats"
+    )
     list_filter = ("route__source", "route__destination", "departure_time", "crew")
     search_fields = (
         "route__source__name",
@@ -79,4 +81,6 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
     list_display = ("flight", "seat_number", "order")
-    list_filter = ("flight__route__source", "flight__route__destination", "flight__departure_time")
+    list_filter = (
+        "flight__route__source", "flight__route__destination", "flight__departure_time"
+    )

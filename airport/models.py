@@ -117,12 +117,16 @@ class Flight(models.Model):
 
     def clean(self):
         if self.arrival_time <= self.departure_time:
-            raise ValidationError({"arrival_time": "Arrival time must be after departure time"})
+            raise ValidationError(
+                {"arrival_time": "Arrival time must be after departure time"}
+            )
 
     def __str__(self):
         return (
-            f"{self.route.source.name} ({self.departure_time.strftime("%Y.%m.%d %H:%M")}) → "
-            f"{self.route.destination.name} ({self.arrival_time.strftime("%Y.%m.%d %H:%M")})"
+            f"{self.route.source.name} "
+            f"({self.departure_time.strftime("%Y.%m.%d %H:%M")}) → "
+            f"{self.route.destination.name} "
+            f"({self.arrival_time.strftime("%Y.%m.%d %H:%M")})"
         )
 
 
@@ -169,7 +173,12 @@ class Ticket(models.Model):
             )
         if self.seat > self.flight.airplane.seats_in_row:
             raise ValidationError(
-                {"seat": f"Row number must be between 1 and {self.flight.airplane.seats_in_row}"}
+                {
+                    "seat": (
+                        "Row number must be between 1 and "
+                        f"{self.flight.airplane.seats_in_row}"
+                    )
+                }
             )
         if self.flight.departure_time <= timezone.now():
             raise ValidationError({"flight": "Cannot create ticket for past flights"})
