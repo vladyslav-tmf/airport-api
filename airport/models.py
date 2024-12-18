@@ -4,8 +4,10 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils import timezone
 
+from common.models import TimestampedUUIDBaseModel
 
-class Airport(models.Model):
+
+class Airport(TimestampedUUIDBaseModel):
     name = models.CharField(max_length=255, unique=True)
     closest_big_city = models.CharField(max_length=255)
 
@@ -16,7 +18,7 @@ class Airport(models.Model):
         return f"{self.name} ({self.closest_big_city})"
 
 
-class AirplaneType(models.Model):
+class AirplaneType(TimestampedUUIDBaseModel):
     name = models.CharField(max_length=255, unique=True)
 
     class Meta:
@@ -26,7 +28,7 @@ class AirplaneType(models.Model):
         return self.name
 
 
-class Airplane(models.Model):
+class Airplane(TimestampedUUIDBaseModel):
     name = models.CharField(max_length=255)
     rows = models.PositiveSmallIntegerField()
     seats_in_row = models.PositiveSmallIntegerField()
@@ -51,7 +53,7 @@ class Airplane(models.Model):
         return f"{self.airplane_type.name} {self.name}"
 
 
-class Crew(models.Model):
+class Crew(TimestampedUUIDBaseModel):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
@@ -67,7 +69,7 @@ class Crew(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Route(models.Model):
+class Route(TimestampedUUIDBaseModel):
     source = models.ForeignKey(
         Airport, on_delete=models.CASCADE, related_name="source_routes"
     )
@@ -97,7 +99,7 @@ class Route(models.Model):
         return f"{self.source.name} → {self.destination.name} ({self.distance} km)"
 
 
-class Flight(models.Model):
+class Flight(TimestampedUUIDBaseModel):
     route = models.ForeignKey(
         Route, on_delete=models.CASCADE, related_name="flights"
     )
@@ -124,14 +126,14 @@ class Flight(models.Model):
     def __str__(self):
         return (
             f"{self.route.source.name} "
-            f"({self.departure_time.strftime("%Y.%m.%d %H:%M")}) → "
+            f"({self.departure_time.strftime('%Y.%m.%d %H:%M')}) → "
             f"{self.route.destination.name} "
-            f"({self.arrival_time.strftime("%Y.%m.%d %H:%M")})"
+            f"({self.arrival_time.strftime('%Y.%m.%d %H:%M')})"
         )
 
 
-class Order(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+class Order(TimestampedUUIDBaseModel):
+    number = models.PositiveSmallIntegerField(unique=True, editable=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
     )
@@ -139,11 +141,17 @@ class Order(models.Model):
     class Meta:
         ordering = ("-created_at",)
 
+    def save(self, *args, **kwargs):
+        if not self.number:
+            last_order = Order.objects.order_by("created_at", "id").last()
+            self.number = (last_order.number + 1) if last_order else 1
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"#{self.id} by {self.user.get_full_name()}"
+        return f"#{self.number} by {self.user.get_full_name()}"
 
 
-class Ticket(models.Model):
+class Ticket(TimestampedUUIDBaseModel):
     row = models.PositiveSmallIntegerField()
     seat = models.PositiveSmallIntegerField()
     flight = models.ForeignKey(

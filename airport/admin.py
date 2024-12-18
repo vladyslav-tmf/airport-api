@@ -63,7 +63,7 @@ class FlightAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "created_at", "customer", "tickets_count")
+    list_display = ("number", "created_at", "customer", "tickets_count")
     list_filter = ("created_at", "user")
     search_fields = ("user__email", "user__first_name", "user__last_name")
     date_hierarchy = "created_at"
