@@ -138,7 +138,6 @@ class Flight(TimestampedUUIDBaseModel):
 
 
 class Order(TimestampedUUIDBaseModel):
-    number = models.PositiveSmallIntegerField(unique=True, editable=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
     )
@@ -146,14 +145,8 @@ class Order(TimestampedUUIDBaseModel):
     class Meta:
         ordering = ("-created_at",)
 
-    def save(self, *args, **kwargs):
-        if not self.number:
-            last_order = Order.objects.order_by("created_at", "id").last()
-            self.number = (last_order.number + 1) if last_order else 1
-        super().save(*args, **kwargs)
-
     def __str__(self):
-        return f"#{self.number} by {self.user.get_full_name()}"
+        return f"Order \"{self.id}\" by {self.user.get_full_name()}"
 
 
 class Ticket(TimestampedUUIDBaseModel):

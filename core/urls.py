@@ -47,6 +47,7 @@ doc_patterns = [
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/user/", include("accounts.urls", namespace="accounts")),
+    path("api/v1/", include("airport.urls", namespace="airport")),
     path("", include(doc_patterns)),
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
