@@ -154,6 +154,8 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {"anon": "500/day", "user": "1000/day"},
+    "DEFAULT_PAGINATION_CLASS": "airport.pagination.StandardResultsSetPagination",
+    "PAGE_SIZE": 10,
 }
 
 # JSON Web Token configuration

@@ -1,9 +1,7 @@
 from uuid import UUID
 
 from django.db.models import Count, QuerySet
-from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
-    OpenApiParameter,
     OpenApiResponse,
     extend_schema,
     extend_schema_view,
@@ -22,6 +20,14 @@ from rest_framework.response import Response
 from rest_framework.utils import timezone
 from rest_framework.viewsets import GenericViewSet
 
+from airport.api_schema import (
+    FLIGHT_FILTER_PARAMETERS,
+    FORBIDDEN_403_RESPONSE,
+    NOT_FOUND_404_RESPONSE,
+    PAGINATION_PARAMETERS,
+    UNAUTHORIZED_401_RESPONSE,
+    VALIDATION_400_RESPONSE,
+)
 from airport.models import (
     Airplane,
     AirplaneType,
@@ -80,10 +86,11 @@ class BaseViewSet(
     list=extend_schema(
         description="Retrieve a list of all airports.",
         responses={
-            status.HTTP_200_OK: AirportSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirportSerializer(many=True),
+                description="Successfully retrieved list of airports.",
             ),
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Airports",),
     ),
@@ -91,16 +98,13 @@ class BaseViewSet(
         description="Create a new airport.",
         request=AirportSerializer,
         responses={
-            status.HTTP_201_CREATED: AirportSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=AirportSerializer,
+                description="Successfully created airport.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to create an airport."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Airports",),
     ),
@@ -108,12 +112,8 @@ class BaseViewSet(
         description="Get detailed information about a specific airport.",
         responses={
             status.HTTP_200_OK: AirportSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airport not found."
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airports",),
     ),
@@ -122,18 +122,10 @@ class BaseViewSet(
         request=AirportSerializer,
         responses={
             status.HTTP_200_OK: AirportSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airport."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airport not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airports",),
     ),
@@ -142,18 +134,10 @@ class BaseViewSet(
         request=AirportSerializer,
         responses={
             status.HTTP_200_OK: AirportSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airport."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airport not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airports",),
     ),
@@ -162,16 +146,18 @@ class AirportViewSet(BaseViewSet):
     """ViewSet for Airport instances."""
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
+    pagination_class = None
 
 
 @extend_schema_view(
     list=extend_schema(
         description="Retrieve a list of all airplane types with count of airplanes.",
         responses={
-            status.HTTP_200_OK: AirplaneTypeListRetrieveSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneTypeListRetrieveSerializer(many=True),
+                description="Successfully retrieved list of airplane types.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Airplane Types",),
     ),
@@ -179,16 +165,13 @@ class AirportViewSet(BaseViewSet):
         description="Create a new airplane type.",
         request=AirplaneTypeSerializer,
         responses={
-            status.HTTP_201_CREATED: AirplaneTypeSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=AirplaneTypeSerializer,
+                description="Successfully created airplane type.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to create an airplane type."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Airplane Types",),
     ),
@@ -196,12 +179,8 @@ class AirportViewSet(BaseViewSet):
         description="Get detailed information about a specific airplane type.",
         responses={
             status.HTTP_200_OK: AirplaneTypeListRetrieveSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane type not found."
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplane Types",),
     ),
@@ -210,18 +189,10 @@ class AirportViewSet(BaseViewSet):
         request=AirplaneTypeSerializer,
         responses={
             status.HTTP_200_OK: AirplaneTypeSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airplane type."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane type not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplane Types",),
     ),
@@ -230,24 +201,18 @@ class AirportViewSet(BaseViewSet):
         request=AirplaneTypeSerializer,
         responses={
             status.HTTP_200_OK: AirplaneTypeSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airplane type."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane type not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplane Types",),
     ),
 )
 class AirplaneTypeViewSet(BaseViewSet):
     """ViewSet for AirplaneType instances."""
+    pagination_class = None
+
     def get_queryset(self) -> QuerySet[AirplaneType]:
         if self.action in ("list", "retrieve"):
             return AirplaneType.objects.annotate(airplanes_count=Count("airplanes"))
@@ -263,12 +228,14 @@ class AirplaneTypeViewSet(BaseViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Retrieve a list of all airplanes.",
+        description="Retrieve a paginated list of all airplanes.",
+        parameters=PAGINATION_PARAMETERS,
         responses={
-            status.HTTP_200_OK: AirplaneListSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneListSerializer(many=True),
+                description="Successfully retrieved list of airplanes.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Airplanes",),
     ),
@@ -276,16 +243,13 @@ class AirplaneTypeViewSet(BaseViewSet):
         description="Create a new airplane.",
         request=AirplaneSerializer,
         responses={
-            status.HTTP_201_CREATED: AirplaneSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=AirplaneSerializer,
+                description="Successfully created airplane.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to create an airplane."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Airplanes",),
     ),
@@ -293,12 +257,8 @@ class AirplaneTypeViewSet(BaseViewSet):
         description="Get detailed information about a specific airplane.",
         responses={
             status.HTTP_200_OK: AirplaneDetailSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane not found."
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplanes",),
     ),
@@ -307,18 +267,10 @@ class AirplaneTypeViewSet(BaseViewSet):
         request=AirplaneSerializer,
         responses={
             status.HTTP_200_OK: AirplaneSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airplane."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplanes",),
     ),
@@ -327,18 +279,10 @@ class AirplaneTypeViewSet(BaseViewSet):
         request=AirplaneSerializer,
         responses={
             status.HTTP_200_OK: AirplaneSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airplane."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplanes",),
     ),
@@ -364,18 +308,10 @@ class AirplaneViewSet(BaseViewSet):
         request=AirplaneImageSerializer,
         responses={
             status.HTTP_200_OK: AirplaneImageSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid image provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an airplane."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Airplane not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Airplanes",),
     )
@@ -398,10 +334,11 @@ class AirplaneViewSet(BaseViewSet):
     list=extend_schema(
         description="Retrieve a list of all crew members with their flight counts.",
         responses={
-            status.HTTP_200_OK: CrewListSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=CrewSerializer(many=True),
+                description="Successfully retrieved list of crew members.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Crew",),
     ),
@@ -409,16 +346,13 @@ class AirplaneViewSet(BaseViewSet):
         description="Create a new crew member.",
         request=CrewSerializer,
         responses={
-            status.HTTP_201_CREATED: CrewSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=CrewSerializer,
+                description="Successfully created crew member.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to create a crew member."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Crew",),
     ),
@@ -426,12 +360,8 @@ class AirplaneViewSet(BaseViewSet):
         description="Get detailed information about a specific crew member.",
         responses={
             status.HTTP_200_OK: CrewSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Crew member not found."
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Crew",),
     ),
@@ -440,18 +370,10 @@ class AirplaneViewSet(BaseViewSet):
         request=CrewSerializer,
         responses={
             status.HTTP_200_OK: CrewSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a crew member."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Crew member not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Crew",),
     ),
@@ -460,24 +382,18 @@ class AirplaneViewSet(BaseViewSet):
         request=CrewSerializer,
         responses={
             status.HTTP_200_OK: CrewSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a crew member."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Crew member not found."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Crew",),
     ),
 )
 class CrewViewSet(BaseViewSet):
     """ViewSet for Crew instances."""
+    pagination_class = None
+
     def get_queryset(self) -> QuerySet[Crew]:
         if self.action == "list":
             return Crew.objects.annotate(flights_count=Count("flights"))
@@ -495,10 +411,11 @@ class CrewViewSet(BaseViewSet):
     list=extend_schema(
         description="Retrieve a list of all routes.",
         responses={
-            status.HTTP_200_OK: RouteListSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=RouteSerializer(many=True),
+                description="Successfully retrieved list of routes.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Routes",),
     ),
@@ -506,16 +423,13 @@ class CrewViewSet(BaseViewSet):
         description="Create a new route.",
         request=RouteSerializer,
         responses={
-            status.HTTP_201_CREATED: RouteSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=RouteSerializer,
+                description="Successfully created route.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to create a route."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Routes",),
     ),
@@ -523,12 +437,8 @@ class CrewViewSet(BaseViewSet):
         description="Get detailed information about a specific route.",
         responses={
             status.HTTP_200_OK: RouteDetailSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(
-                description="Route not found."
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Routes",),
     ),
@@ -537,16 +447,10 @@ class CrewViewSet(BaseViewSet):
         request=RouteSerializer,
         responses={
             status.HTTP_200_OK: RouteSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a route."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Route not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Routes",),
     ),
@@ -555,22 +459,18 @@ class CrewViewSet(BaseViewSet):
         request=RouteSerializer,
         responses={
             status.HTTP_200_OK: RouteSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a route."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Route not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Routes",),
     ),
 )
 class RouteViewSet(BaseViewSet):
     """ViewSet for Route instances."""
+    pagination_class = None
+
     def get_queryset(self) -> QuerySet[Route]:
         if self.action in ("list", "retrieve"):
             return Route.objects.select_related("source", "destination")
@@ -589,51 +489,30 @@ class RouteViewSet(BaseViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Retrieve a list of all flights with filtering options.",
+        description="Retrieve a paginated list of all flights with filtering options.",
         parameters=[
-            OpenApiParameter(
-                name="source_airport",
-                type=OpenApiTypes.UUID,
-                description="Filter by source airport ID.",
-            ),
-            OpenApiParameter(
-                name="destination_airport",
-                type=OpenApiTypes.UUID,
-                description="Filter by destination airport ID.",
-            ),
-            OpenApiParameter(
-                name="departure_date",
-                type=OpenApiTypes.DATE,
-                description="Filter by departure date (YYYY-MM-DD).",
-            ),
-            OpenApiParameter(
-                name="crew",
-                type=OpenApiTypes.STR,
-                description="Filter by crew member IDs (comma separated UUIDs).",
-            ),
-            OpenApiParameter(
-                name="airplane_type",
-                type=OpenApiTypes.UUID,
-                description="Filter by airplane type ID.",
-            ),
+            *PAGINATION_PARAMETERS,
+            *FLIGHT_FILTER_PARAMETERS,
         ],
-        responses={status.HTTP_200_OK: FlightListSerializer},
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response=FlightListSerializer(many=True),
+                description="Flights successfully retrieved.",
+            )
+        },
         tags=("Flights",),
     ),
     create=extend_schema(
         description="Create a new flight.",
         request=FlightSerializer,
         responses={
-            status.HTTP_201_CREATED: FlightSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=FlightSerializer,
+                description="Successfully created flight.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to create a flight."
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
         },
         tags=("Flights",),
     ),
@@ -641,10 +520,8 @@ class RouteViewSet(BaseViewSet):
         description="Get detailed information about a specific flight.",
         responses={
             status.HTTP_200_OK: FlightDetailSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Flight not found."),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Flights",),
     ),
@@ -653,16 +530,10 @@ class RouteViewSet(BaseViewSet):
         request=FlightSerializer,
         responses={
             status.HTTP_200_OK: FlightSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a flight."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Flight not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Flights",),
     ),
@@ -671,16 +542,10 @@ class RouteViewSet(BaseViewSet):
         request=FlightSerializer,
         responses={
             status.HTTP_200_OK: FlightSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a flight."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Flight not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Flights",),
     ),
@@ -752,12 +617,14 @@ class FlightViewSet(BaseViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Retrieve a list of user's orders.",
+        description="Retrieve a paginated list of user's orders.",
+        parameters=PAGINATION_PARAMETERS,
         responses={
-            status.HTTP_200_OK: OrderListSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=OrderListSerializer(many=True),
+                description="List of orders successfully retrieved.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Orders",),
     ),
@@ -765,10 +632,11 @@ class FlightViewSet(BaseViewSet):
         description="Create a new order.",
         request=OrderSerializer,
         responses={
-            status.HTTP_201_CREATED: OrderSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=OrderSerializer,
+                description="Successfully created order.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Orders",),
     ),
@@ -776,10 +644,8 @@ class FlightViewSet(BaseViewSet):
         description="Get detailed information about a specific order.",
         responses={
             status.HTTP_200_OK: OrderDetailSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Order not found."),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Orders",),
     ),
@@ -788,16 +654,10 @@ class FlightViewSet(BaseViewSet):
         request=OrderSerializer,
         responses={
             status.HTTP_200_OK: OrderSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an order."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Order not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Orders",),
     ),
@@ -806,16 +666,10 @@ class FlightViewSet(BaseViewSet):
         request=OrderSerializer,
         responses={
             status.HTTP_200_OK: OrderSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update an order."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Order not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Orders",),
     ),
@@ -861,12 +715,14 @@ class OrderViewSet(BaseViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Retrieve a list of user's tickets.",
+        description="Retrieve a paginated list of user's tickets.",
+        parameters=PAGINATION_PARAMETERS,
         responses={
-            status.HTTP_200_OK: TicketListSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_200_OK: OpenApiResponse(
+                response=TicketListSerializer(many=True),
+                description="List of tickets successfully retrieved.",
             ),
+            **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Tickets",),
     ),
@@ -874,13 +730,12 @@ class OrderViewSet(BaseViewSet):
         description="Create a new ticket.",
         request=TicketSerializer,
         responses={
-            status.HTTP_201_CREATED: TicketSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=TicketSerializer,
+                description="Successfully created ticket.",
             ),
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **VALIDATION_400_RESPONSE,
         },
         tags=("Tickets",),
     ),
@@ -888,10 +743,8 @@ class OrderViewSet(BaseViewSet):
         description="Get detailed information about a specific ticket.",
         responses={
             status.HTTP_200_OK: TicketDetailSerializer,
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Ticket not found."),
+            **UNAUTHORIZED_401_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Tickets",),
     ),
@@ -900,16 +753,10 @@ class OrderViewSet(BaseViewSet):
         request=TicketSerializer,
         responses={
             status.HTTP_200_OK: TicketSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a ticket."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Ticket not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Tickets",),
     ),
@@ -918,16 +765,10 @@ class OrderViewSet(BaseViewSet):
         request=TicketSerializer,
         responses={
             status.HTTP_200_OK: TicketSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Invalid data provided."
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated."
-            ),
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(
-                description="User does not have permission to update a ticket."
-            ),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Ticket not found."),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **FORBIDDEN_403_RESPONSE,
+            **NOT_FOUND_404_RESPONSE,
         },
         tags=("Tickets",),
     ),
