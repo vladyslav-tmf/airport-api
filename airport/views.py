@@ -111,7 +111,10 @@ class BaseViewSet(
     retrieve=extend_schema(
         description="Get detailed information about a specific airport.",
         responses={
-            status.HTTP_200_OK: AirportSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirportSerializer,
+                description="Successfully retrieved airport.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -121,7 +124,10 @@ class BaseViewSet(
         description="Full update of airport information.",
         request=AirportSerializer,
         responses={
-            status.HTTP_200_OK: AirportSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirportSerializer,
+                description="Successfully updated airport.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -133,7 +139,10 @@ class BaseViewSet(
         description="Partial update of airport information.",
         request=AirportSerializer,
         responses={
-            status.HTTP_200_OK: AirportSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirportSerializer,
+                description="Successfully updated airport.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -178,7 +187,10 @@ class AirportViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific airplane type.",
         responses={
-            status.HTTP_200_OK: AirplaneTypeListRetrieveSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneTypeListRetrieveSerializer,
+                description="Successfully retrieved airplane type.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -188,7 +200,10 @@ class AirportViewSet(BaseViewSet):
         description="Full update of airplane type information.",
         request=AirplaneTypeSerializer,
         responses={
-            status.HTTP_200_OK: AirplaneTypeSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneTypeSerializer,
+                description="Successfully updated airplane type.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -200,7 +215,10 @@ class AirportViewSet(BaseViewSet):
         description="Partial update of airplane type information.",
         request=AirplaneTypeSerializer,
         responses={
-            status.HTTP_200_OK: AirplaneTypeSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneTypeSerializer,
+                description="Successfully updated airplane type.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -256,7 +274,10 @@ class AirplaneTypeViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific airplane.",
         responses={
-            status.HTTP_200_OK: AirplaneDetailSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneDetailSerializer,
+                description="Successfully retrieved airplane.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -266,7 +287,10 @@ class AirplaneTypeViewSet(BaseViewSet):
         description="Full update of airplane information.",
         request=AirplaneSerializer,
         responses={
-            status.HTTP_200_OK: AirplaneSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneSerializer,
+                description="Successfully updated airplane.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -278,7 +302,10 @@ class AirplaneTypeViewSet(BaseViewSet):
         description="Partial update of airplane information.",
         request=AirplaneSerializer,
         responses={
-            status.HTTP_200_OK: AirplaneSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneSerializer,
+                description="Successfully updated airplane.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -307,7 +334,10 @@ class AirplaneViewSet(BaseViewSet):
         description="Upload an image for a specific airplane.",
         request=AirplaneImageSerializer,
         responses={
-            status.HTTP_200_OK: AirplaneImageSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=AirplaneImageSerializer,
+                description="Successfully uploaded image.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -359,7 +389,10 @@ class AirplaneViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific crew member.",
         responses={
-            status.HTTP_200_OK: CrewSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=CrewSerializer,
+                description="Successfully retrieved crew member.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -369,7 +402,10 @@ class AirplaneViewSet(BaseViewSet):
         description="Full update of crew member information.",
         request=CrewSerializer,
         responses={
-            status.HTTP_200_OK: CrewSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=CrewSerializer,
+                description="Successfully updated crew member.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -381,7 +417,10 @@ class AirplaneViewSet(BaseViewSet):
         description="Partial update of crew member information.",
         request=CrewSerializer,
         responses={
-            status.HTTP_200_OK: CrewSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=CrewSerializer,
+                description="Successfully updated crew member.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -436,7 +475,10 @@ class CrewViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific route.",
         responses={
-            status.HTTP_200_OK: RouteDetailSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=RouteDetailSerializer,
+                description="Successfully retrieved route.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -446,7 +488,10 @@ class CrewViewSet(BaseViewSet):
         description="Full update of route information.",
         request=RouteSerializer,
         responses={
-            status.HTTP_200_OK: RouteSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=RouteSerializer,
+                description="Successfully updated route.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -458,7 +503,10 @@ class CrewViewSet(BaseViewSet):
         description="Partial update of route information.",
         request=RouteSerializer,
         responses={
-            status.HTTP_200_OK: RouteSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=RouteSerializer,
+                description="Successfully updated route.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -519,7 +567,10 @@ class RouteViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific flight.",
         responses={
-            status.HTTP_200_OK: FlightDetailSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=FlightDetailSerializer,
+                description="Successfully retrieved flight.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -529,7 +580,10 @@ class RouteViewSet(BaseViewSet):
         description="Full update of flight information.",
         request=FlightSerializer,
         responses={
-            status.HTTP_200_OK: FlightSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=FlightSerializer,
+                description="Successfully updated flight.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -541,7 +595,10 @@ class RouteViewSet(BaseViewSet):
         description="Partial update of flight information.",
         request=FlightSerializer,
         responses={
-            status.HTTP_200_OK: FlightSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=FlightSerializer,
+                description="Successfully updated flight.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -629,13 +686,14 @@ class FlightViewSet(BaseViewSet):
         tags=("Orders",),
     ),
     create=extend_schema(
-        description="Create a new order.",
+        description="Create a new order with tickets.",
         request=OrderSerializer,
         responses={
             status.HTTP_201_CREATED: OpenApiResponse(
                 response=OrderSerializer,
-                description="Successfully created order.",
+                description="Successfully created order with tickets.",
             ),
+            **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
         },
         tags=("Orders",),
@@ -643,7 +701,10 @@ class FlightViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific order.",
         responses={
-            status.HTTP_200_OK: OrderDetailSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=OrderDetailSerializer,
+                description="Order successfully retrieved.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -653,7 +714,10 @@ class FlightViewSet(BaseViewSet):
         description="Full update of order information.",
         request=OrderSerializer,
         responses={
-            status.HTTP_200_OK: OrderSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=OrderSerializer,
+                description="Successfully updated order.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -665,7 +729,10 @@ class FlightViewSet(BaseViewSet):
         description="Partial update of order information.",
         request=OrderSerializer,
         responses={
-            status.HTTP_200_OK: OrderSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=OrderSerializer,
+                description="Successfully updated order.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -709,7 +776,7 @@ class OrderViewSet(BaseViewSet):
         return OrderSerializer
 
     def perform_create(self, serializer: OrderSerializer) -> None:
-        """Save order with current user."""
+        """Create order with tickets for current user."""
         serializer.save(user=self.request.user)
 
 
@@ -742,7 +809,10 @@ class OrderViewSet(BaseViewSet):
     retrieve=extend_schema(
         description="Get detailed information about a specific ticket.",
         responses={
-            status.HTTP_200_OK: TicketDetailSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=TicketDetailSerializer,
+                description="Ticket successfully retrieved.",
+            ),
             **UNAUTHORIZED_401_RESPONSE,
             **NOT_FOUND_404_RESPONSE,
         },
@@ -752,7 +822,10 @@ class OrderViewSet(BaseViewSet):
         description="Full update of ticket information.",
         request=TicketSerializer,
         responses={
-            status.HTTP_200_OK: TicketSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=TicketSerializer,
+                description="Successfully updated ticket.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,
@@ -764,7 +837,10 @@ class OrderViewSet(BaseViewSet):
         description="Partial update of ticket information.",
         request=TicketSerializer,
         responses={
-            status.HTTP_200_OK: TicketSerializer,
+            status.HTTP_200_OK: OpenApiResponse(
+                response=TicketSerializer,
+                description="Successfully updated ticket.",
+            ),
             **VALIDATION_400_RESPONSE,
             **UNAUTHORIZED_401_RESPONSE,
             **FORBIDDEN_403_RESPONSE,

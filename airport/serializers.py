@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -116,7 +117,7 @@ class RouteSerializer(serializers.ModelSerializer):
         model = Route
         fields = ("id", "source", "destination", "distance")
 
-    def validate(self, attrs: dict) -> dict:
+    def validate(self, attrs):
         """
         Validate route data:
         - Source and destination airports must be different.
@@ -167,7 +168,7 @@ class FlightSerializer(serializers.ModelSerializer):
             "crew",
         )
 
-    def validate(self, attrs: dict) -> dict:
+    def validate(self, attrs):
         """Validate that arrival time is after departure time."""
         if attrs["arrival_time"] <= attrs["departure_time"]:
             raise serializers.ValidationError(
@@ -202,7 +203,7 @@ class FlightListSerializer(serializers.ModelSerializer):
             "crew_names",
         )
 
-    def get_crew_names(self, flight: Flight) -> list[str]:
+    def get_crew_names(self, flight):
         """Get list of full names of crew members assigned to the flight."""
         return [member.full_name for member in flight.crew.all()]
 
@@ -226,23 +227,6 @@ class FlightDetailSerializer(serializers.ModelSerializer):
         )
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    """Serializer for Order model."""
-    class Meta:
-        model = Order
-        fields = ("id", "created_at")
-
-
-class OrderListSerializer(serializers.ModelSerializer):
-    """Serializer for listing Orders with user and tickets information."""
-    user_full_name = serializers.CharField(source="user.get_full_name", read_only=True)
-    tickets_count = serializers.IntegerField(source="tickets.count", read_only=True)
-
-    class Meta:
-        model = Order
-        fields = ("id", "user_full_name", "tickets_count", "created_at")
-
-
 class TicketSerializer(serializers.ModelSerializer):
     """Serializer for Ticket model with seat and flight validation."""
     class Meta:
@@ -252,10 +236,9 @@ class TicketSerializer(serializers.ModelSerializer):
             "row",
             "seat",
             "flight",
-            "order",
         )
 
-    def validate(self, attrs: dict) -> dict:
+    def validate(self, attrs):
         """
         Validate ticket data:
         - Check if seat exists in airplane.
@@ -310,6 +293,35 @@ class TicketDetailSerializer(serializers.ModelSerializer):
             "flight",
             "order",
         )
+
+class OrderSerializer(serializers.ModelSerializer):
+    """Serializer for Order model with nested tickets creation."""
+    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+
+    class Meta:
+        model = Order
+        fields = ("id", "created_at", "tickets")
+
+    def create(self, validated_data: dict) -> Order:
+        """Create order with nested tickets in a single transaction."""
+        with transaction.atomic():
+            tickets_data = validated_data.pop("tickets")
+            order = Order.objects.create(**validated_data)
+
+            for ticket_data in tickets_data:
+                Ticket.objects.create(order=order, **ticket_data)
+
+            return order
+
+
+class OrderListSerializer(serializers.ModelSerializer):
+    """Serializer for listing Orders with user and tickets information."""
+    user_full_name = serializers.CharField(source="user.get_full_name", read_only=True)
+    tickets_count = serializers.IntegerField(source="tickets.count", read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ("id", "user_full_name", "tickets_count", "created_at")
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
