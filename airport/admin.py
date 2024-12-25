@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.db.models import QuerySet
+from django.http import HttpRequest
 
 from airport.models import (
     Airplane,
@@ -68,15 +70,15 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ("user__email", "user__first_name", "user__last_name")
     date_hierarchy = "created_at"
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Order]:
         """Optimize database queries by using select_related for the user field."""
         return super().get_queryset(request).select_related("user")
 
-    def customer(self, order):
+    def customer(self, order: Order) -> str:
         """Get customer full name by combining first and last name."""
         return order.user.get_full_name()
 
-    def tickets_count(self, order):
+    def tickets_count(self, order: Order) -> int:
         """Get total number of tickets in the order."""
         return order.tickets.count()
 

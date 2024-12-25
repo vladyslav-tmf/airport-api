@@ -1,8 +1,12 @@
+from django.contrib.auth import get_user_model
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from accounts.serializers import UserSerializer
+
+
+User = get_user_model()
 
 
 @extend_schema_view(
@@ -81,6 +85,6 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self):
+    def get_object(self) -> User:
         """Get currently authenticated user instance."""
         return self.request.user

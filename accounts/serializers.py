@@ -3,6 +3,9 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 
+User = get_user_model()
+
+
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the User model."""
     password = serializers.CharField(
@@ -13,15 +16,15 @@ class UserSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ("id", "email", "first_name", "last_name", "password", "is_staff")
         read_only_fields = ("id", "is_staff",)
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict):
         """Create a new user with encrypted password and return it."""
-        return get_user_model().objects.create_user(**validated_data)
+        return User.objects.create_user(**validated_data)
 
-    def update(self, instance, validated_data):
+    def update(self, instance: User, validated_data: dict):
         """Update a user, set the password correctly and return it."""
         password = validated_data.pop("password", None)
         user = super().update(instance, validated_data)

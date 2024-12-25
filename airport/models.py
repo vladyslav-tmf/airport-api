@@ -15,7 +15,7 @@ class Airport(TimestampedUUIDBaseModel):
     class Meta:
         ordering = ("name",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} ({self.closest_big_city})"
 
 
@@ -25,7 +25,7 @@ class AirplaneType(TimestampedUUIDBaseModel):
     class Meta:
         ordering = ("name",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -39,7 +39,7 @@ class Airplane(TimestampedUUIDBaseModel):
     image = models.ImageField(null=True, blank=True, upload_to=airplane_image_file_path)
 
     @property
-    def total_seats(self):
+    def total_seats(self) -> int:
         """Calculate total number of seats in the airplane."""
         return self.rows * self.seats_in_row
 
@@ -52,7 +52,7 @@ class Airplane(TimestampedUUIDBaseModel):
             )
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.airplane_type.name} {self.name}"
 
 
@@ -61,7 +61,7 @@ class Crew(TimestampedUUIDBaseModel):
     last_name = models.CharField(max_length=255)
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         """Get crew member's full name by combining first and last name."""
         return f"{self.first_name} {self.last_name}"
 
@@ -69,7 +69,7 @@ class Crew(TimestampedUUIDBaseModel):
         ordering = ("last_name", "first_name")
         verbose_name_plural = "crew"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
 
@@ -91,15 +91,16 @@ class Route(TimestampedUUIDBaseModel):
             )
         ]
 
-    def clean(self):
+    def clean(self) -> None:
         if self.source == self.destination:
             raise ValidationError(
                 {"destination": "Source and destination airports cannot be the same"}
             )
+
         if self.distance > 20000:
             raise ValidationError({"distance": "Distance cannot exceed 20,000 km"})
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.source.name} → {self.destination.name} ({self.distance} km)"
 
 
@@ -115,20 +116,20 @@ class Flight(TimestampedUUIDBaseModel):
     crew = models.ManyToManyField(Crew, related_name="flights")
 
     @property
-    def available_seats(self):
+    def available_seats(self) -> int:
         """Calculate number of available seats on the flight."""
         return self.airplane.total_seats - self.tickets.count()
 
     class Meta:
         ordering = ("departure_time",)
 
-    def clean(self):
+    def clean(self) -> None:
         if self.arrival_time <= self.departure_time:
             raise ValidationError(
                 {"arrival_time": "Arrival time must be after departure time"}
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"{self.route.source.name} "
             f"({self.departure_time.strftime('%Y.%m.%d %H:%M')}) → "
@@ -145,7 +146,7 @@ class Order(TimestampedUUIDBaseModel):
     class Meta:
         ordering = ("-created_at",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Order \"{self.id}\" by {self.user.get_full_name()}"
 
 
@@ -160,7 +161,7 @@ class Ticket(TimestampedUUIDBaseModel):
     )
 
     @property
-    def seat_number(self):
+    def seat_number(self) -> str:
         """Get formatted seat number string combining row and seat numbers."""
         return f"{self.row}-{self.seat}"
 
@@ -174,7 +175,12 @@ class Ticket(TimestampedUUIDBaseModel):
         ]
 
     @staticmethod
-    def validate_ticket(row, seat, airplane, error_to_raise):
+    def validate_ticket(
+        row: int,
+        seat: int,
+        airplane: Airplane,
+        error_to_raise,
+    ) -> None:
         """
         Validate that ticket row and seat numbers are within
         airplane's seating configuration.
@@ -194,12 +200,13 @@ class Ticket(TimestampedUUIDBaseModel):
                     }
                 )
 
-    def clean(self):
+    def clean(self) -> None:
         self.validate_ticket(self.row, self.seat, self.flight.airplane, ValidationError)
+
         if self.flight.departure_time <= timezone.now():
             raise ValidationError({"flight": "Cannot create ticket for past flights"})
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"{self.flight.route.source.closest_big_city} → "
             f"{self.flight.route.destination.closest_big_city} "

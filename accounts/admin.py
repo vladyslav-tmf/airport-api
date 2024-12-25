@@ -1,8 +1,11 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from accounts.forms import CustomUserCreationForm
-from accounts.models import User
+
+
+User = get_user_model()
 
 
 @admin.register(User)
@@ -46,6 +49,6 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ("email", "first_name", "last_name")
     ordering = ("last_name", "first_name")
 
-    def orders_count(self, user):
+    def orders_count(self, user: User) -> int:
         """Return the total number of orders made by the user."""
         return user.orders.count()

@@ -116,7 +116,7 @@ class RouteSerializer(serializers.ModelSerializer):
         model = Route
         fields = ("id", "source", "destination", "distance")
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         """
         Validate route data:
         - Source and destination airports must be different.
@@ -167,7 +167,7 @@ class FlightSerializer(serializers.ModelSerializer):
             "crew",
         )
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         """Validate that arrival time is after departure time."""
         if attrs["arrival_time"] <= attrs["departure_time"]:
             raise serializers.ValidationError(
@@ -202,7 +202,7 @@ class FlightListSerializer(serializers.ModelSerializer):
             "crew_names",
         )
 
-    def get_crew_names(self, flight):
+    def get_crew_names(self, flight: Flight) -> list[str]:
         """Get list of full names of crew members assigned to the flight."""
         return [member.full_name for member in flight.crew.all()]
 
@@ -255,7 +255,7 @@ class TicketSerializer(serializers.ModelSerializer):
             "order",
         )
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         """
         Validate ticket data:
         - Check if seat exists in airplane.

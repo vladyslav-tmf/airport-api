@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
     OpenApiParameter,
@@ -17,6 +17,7 @@ from rest_framework.mixins import (
     UpdateModelMixin,
 )
 from rest_framework.permissions import IsAdminUser
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.utils import timezone
 from rest_framework.viewsets import GenericViewSet
@@ -247,7 +248,7 @@ class AirportViewSet(BaseViewSet):
 )
 class AirplaneTypeViewSet(BaseViewSet):
     """ViewSet for AirplaneType instances."""
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[AirplaneType]:
         if self.action in ("list", "retrieve"):
             return AirplaneType.objects.annotate(airplanes_count=Count("airplanes"))
 
@@ -384,7 +385,7 @@ class AirplaneViewSet(BaseViewSet):
         url_path="upload-image",
         permission_classes=(IsAdminUser,)
     )
-    def upload_image(self, request, pk=None):
+    def upload_image(self, request: Request, pk=None) -> Response:
         """Endpoint for uploading image to specific airplane."""
         airplane = self.get_object()
         serializer = self.get_serializer(airplane, data=request.data)
@@ -477,7 +478,7 @@ class AirplaneViewSet(BaseViewSet):
 )
 class CrewViewSet(BaseViewSet):
     """ViewSet for Crew instances."""
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Crew]:
         if self.action == "list":
             return Crew.objects.annotate(flights_count=Count("flights"))
 
@@ -570,7 +571,7 @@ class CrewViewSet(BaseViewSet):
 )
 class RouteViewSet(BaseViewSet):
     """ViewSet for Route instances."""
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Route]:
         if self.action in ("list", "retrieve"):
             return Route.objects.select_related("source", "destination")
 
@@ -699,15 +700,15 @@ class FlightViewSet(BaseViewSet):
         return FlightSerializer
 
     @staticmethod
-    def _params_to_uuids(queryset):
+    def _params_to_uuids(params_string: str) -> list[UUID]:
         """Convert string of comma separated UUIDs to list of UUIDs."""
         try:
-            return [UUID(str_id) for str_id in queryset.split(",")]
+            return [UUID(str_id) for str_id in params_string.split(",")]
 
         except ValueError as error:
             raise serializers.ValidationError({"crew": f"Invalid UUID format: {error}"})
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Flight]:
         """
         Retrieve flights with filters:
         - source_airport: ID of source airport.
@@ -823,14 +824,16 @@ class OrderViewSet(BaseViewSet):
     """ViewSet for Order instances."""
     permission_classes = (IsAdminOrAuthenticatedCreateOnly,)
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Order]:
         queryset = Order.objects.all()
 
         if not self.request.user.is_staff:
             queryset = queryset.filter(user=self.request.user)
 
         if self.action == "list":
-            return queryset.select_related("user").prefetch_related("tickets")
+            return queryset.select_related("user").prefetch_related(
+                "tickets"
+            ).distinct()
 
         if self.action == "retrieve":
             return queryset.select_related("user").prefetch_related(
@@ -838,7 +841,7 @@ class OrderViewSet(BaseViewSet):
                 "tickets__flight__route__destination",
                 "tickets__flight__airplane__airplane_type",
                 "tickets__flight__crew",
-            )
+            ).distinct()
 
         return queryset
 
@@ -851,7 +854,7 @@ class OrderViewSet(BaseViewSet):
 
         return OrderSerializer
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: OrderSerializer) -> None:
         """Save order with current user."""
         serializer.save(user=self.request.user)
 
@@ -933,7 +936,7 @@ class TicketViewSet(BaseViewSet):
     """ViewSet for Ticket instances."""
     permission_classes = (IsAdminOrAuthenticatedCreateOnly,)
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Ticket]:
         queryset = Ticket.objects.all()
 
         if not self.request.user.is_staff:
@@ -962,7 +965,7 @@ class TicketViewSet(BaseViewSet):
 
         return TicketSerializer
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: TicketSerializer) -> None:
         """Create ticket only for user's order."""
         order = serializer.validated_data["order"]
 

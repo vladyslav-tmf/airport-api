@@ -11,6 +11,7 @@ from airport.views import (
     TicketViewSet,
 )
 
+
 app_name = "airport"
 
 router = routers.DefaultRouter()
