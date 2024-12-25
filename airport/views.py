@@ -28,6 +28,16 @@ from airport.api_schema import (
     UNAUTHORIZED_401_RESPONSE,
     VALIDATION_400_RESPONSE,
 )
+from airport.filters import (
+    AirplaneFilter,
+    AirplaneTypeFilter,
+    AirportFilter,
+    CrewFilter,
+    FlightFilter,
+    OrderFilter,
+    RouteFilter,
+    TicketFilter,
+)
 from airport.models import (
     Airplane,
     AirplaneType,
@@ -156,6 +166,9 @@ class AirportViewSet(BaseViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
     pagination_class = None
+    filterset_class = AirportFilter
+    search_fields = ("name", "closest_big_city")
+    ordering_fields = ("name", "closest_big_city")
 
 
 @extend_schema_view(
@@ -230,6 +243,9 @@ class AirportViewSet(BaseViewSet):
 class AirplaneTypeViewSet(BaseViewSet):
     """ViewSet for AirplaneType instances."""
     pagination_class = None
+    filterset_class = AirplaneTypeFilter
+    search_fields = ("name",)
+    ordering_fields = ("name",)
 
     def get_queryset(self) -> QuerySet[AirplaneType]:
         if self.action in ("list", "retrieve"):
@@ -317,6 +333,9 @@ class AirplaneTypeViewSet(BaseViewSet):
 class AirplaneViewSet(BaseViewSet):
     """ViewSet for Airplane instances."""
     queryset = Airplane.objects.select_related("airplane_type")
+    filterset_class = AirplaneFilter
+    search_fields = ("name", "airplane_type__name")
+    ordering_fields = ("name", "rows", "seats_in_row")
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -432,6 +451,9 @@ class AirplaneViewSet(BaseViewSet):
 class CrewViewSet(BaseViewSet):
     """ViewSet for Crew instances."""
     pagination_class = None
+    filterset_class = CrewFilter
+    search_fields = ("first_name", "last_name")
+    ordering_fields = ("first_name", "last_name")
 
     def get_queryset(self) -> QuerySet[Crew]:
         if self.action == "list":
@@ -518,6 +540,9 @@ class CrewViewSet(BaseViewSet):
 class RouteViewSet(BaseViewSet):
     """ViewSet for Route instances."""
     pagination_class = None
+    filterset_class = RouteFilter
+    search_fields = ("source__name", "destination__name")
+    ordering_fields = ("source__name", "destination__name", "distance")
 
     def get_queryset(self) -> QuerySet[Route]:
         if self.action in ("list", "retrieve"):
@@ -610,6 +635,18 @@ class RouteViewSet(BaseViewSet):
 class FlightViewSet(BaseViewSet):
     """ViewSet for Flight instances with advanced filtering."""
     permission_classes = (IsAdminOrReadOnly,)
+    filterset_class = FlightFilter
+    search_fields = (
+        "route__source__name",
+        "route__destination__name",
+        "airplane__name",
+    ),
+    ordering_fields = (
+        "route__source__name",
+        "route__destination__name",
+        "departure_time",
+        "arrival_time",
+    )
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -744,6 +781,8 @@ class FlightViewSet(BaseViewSet):
 class OrderViewSet(BaseViewSet):
     """ViewSet for Order instances."""
     permission_classes = (IsAdminOrAuthenticatedCreateOnly,)
+    filterset_class = OrderFilter
+    ordering_fields = ("created_at",)
 
     def get_queryset(self) -> QuerySet[Order]:
         queryset = Order.objects.all()
@@ -852,16 +891,21 @@ class OrderViewSet(BaseViewSet):
 class TicketViewSet(BaseViewSet):
     """ViewSet for Ticket instances."""
     permission_classes = (IsAdminOrAuthenticatedCreateOnly,)
+    filterset_class = TicketFilter
+    search_fields = ("flight__route__source__name", "flight__route__destination__name")
+    ordering_fields = ("row", "seat")
 
     def get_queryset(self) -> QuerySet[Ticket]:
         queryset = Ticket.objects.all()
 
         if not self.request.user.is_staff:
-            return queryset.filter(order__user=self.request.user)
+            queryset = queryset.filter(order__user=self.request.user)
 
         if self.action == "list":
             return queryset.select_related(
-                "flight__route__source", "flight__route__destination", "order"
+                "flight__route__source",
+                "flight__route__destination",
+                "order",
             )
 
         if self.action == "retrieve":

@@ -34,6 +34,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 INSTALLED_APPS = [
     # Third-party apps:
     "debug_toolbar",
+    "django_filters",
     "drf_spectacular",
     "jazzmin",
     "rest_framework",
@@ -157,6 +158,11 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"anon": "500/day", "user": "1000/day"},
     "DEFAULT_PAGINATION_CLASS": "airport.pagination.StandardResultsSetPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    )
 }
 
 # JSON Web Token configuration
