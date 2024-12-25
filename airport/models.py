@@ -5,7 +5,7 @@ from django.db.models import UniqueConstraint
 from django.utils import timezone
 
 from airport.utils import airplane_image_file_path
-from common.models import TimestampedUUIDBaseModel
+from base.models import TimestampedUUIDBaseModel
 
 
 class Airport(TimestampedUUIDBaseModel):

@@ -24,6 +24,7 @@ from airport.models import (
 from airport.permissions import IsAdminOrReadCreateOnly
 from airport.serializers import (
     AirplaneDetailSerializer,
+    AirplaneImageSerializer,
     AirplaneListSerializer,
     AirplaneSerializer,
     AirplaneTypeListSerializer,
@@ -88,6 +89,8 @@ class AirplaneViewSet(BaseViewSet):
             return AirplaneListSerializer
         if self.action == "retrieve":
             return AirplaneDetailSerializer
+        if self.action == "upload_image":
+            return AirplaneImageSerializer
         return AirplaneSerializer
 
     @action(

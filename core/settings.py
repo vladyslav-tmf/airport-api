@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     # Local apps:
     "accounts",
     "airport",
-    "common",
+    "base",
 ]
 
 MIDDLEWARE = [

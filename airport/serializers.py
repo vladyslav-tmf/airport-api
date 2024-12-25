@@ -87,6 +87,13 @@ class AirplaneDetailSerializer(serializers.ModelSerializer):
         )
 
 
+class AirplaneImageSerializer(serializers.ModelSerializer):
+    """Serializer for Airplane image upload."""
+    class Meta:
+        model = Airplane
+        fields = ("id", "image")
+
+
 class CrewSerializer(serializers.ModelSerializer):
     """Serializer for Crew model."""
     class Meta:
