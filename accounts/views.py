@@ -18,7 +18,7 @@ from accounts.serializers import UserSerializer
                 description="Data validation error.",
             )
         },
-        tags=["Users"],
+        tags=("Users",),
     )
 )
 class CreateUserView(generics.CreateAPIView):
@@ -39,7 +39,7 @@ class CreateUserView(generics.CreateAPIView):
                 description="User is not authenticated.",
             ),
         },
-        tags=["Users"],
+        tags=("Users",),
     ),
     put=extend_schema(
         description="Fully update currently authenticated user's profile information.",
@@ -56,7 +56,7 @@ class CreateUserView(generics.CreateAPIView):
                 description="Data validation error.",
             ),
         },
-        tags=["Users"],
+        tags=("Users",),
     ),
     patch=extend_schema(
         description="Partial update of user's profile information.",
@@ -73,7 +73,7 @@ class CreateUserView(generics.CreateAPIView):
                 description="Data validation error.",
             ),
         },
-        tags=["Users"],
+        tags=("Users",),
     ),
 )
 class ManageUserView(generics.RetrieveUpdateAPIView):

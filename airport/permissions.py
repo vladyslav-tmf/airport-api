@@ -1,23 +1,60 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
-class IsAdminOrReadCreateOnly(BasePermission):
+class IsAdminOrReadOnly(BasePermission):
     """
-    Custom permission class that allows:
-    - Admin users to perform any action.
-    - Authenticated users to perform read and create operations.
-    - Unauthenticated users to perform only read operations.
+    Allows:
+    - Admins all operations except DELETE.
+    - All users read-only access.
     """
     def has_permission(self, request, view):
-        """Check if user has permission to perform action."""
-        if not request.user.is_authenticated:
-            return request.method in SAFE_METHODS
-        if request.user.is_staff:
+        if request.method in SAFE_METHODS:
             return True
+
+        return bool(request.user and request.user.is_staff)
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return bool(request.user and request.user.is_staff)
+
+
+class IsAdminOrAuthenticatedReadOnly(BasePermission):
+    """
+    Allows:
+    - Admins all operations except DELETE.
+    - Authenticated users read-only access.
+    - Anonymous users no access.
+    """
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+
+        if request.user.is_staff:
+            return request.method != "DELETE"
+
+        return request.method in SAFE_METHODS
+
+    def has_object_permission(self, request, view, obj):
+        return self.has_permission(request, view)
+
+
+class IsAdminOrAuthenticatedCreateOnly(BasePermission):
+    """
+    Allows:
+    - Admins all operations except DELETE.
+    - Authenticated users read and create access.
+    - Anonymous users no access.
+    """
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+
+        if request.user.is_staff:
+            return request.method != "DELETE"
+
         return request.method in SAFE_METHODS + ("POST",)
 
     def has_object_permission(self, request, view, obj):
-        """Check if user has permission to perform action on specific object."""
-        if request.user.is_staff:
-            return True
-        return request.method in SAFE_METHODS
+        return self.has_permission(request, view)

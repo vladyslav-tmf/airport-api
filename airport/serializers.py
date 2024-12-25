@@ -27,7 +27,7 @@ class AirplaneTypeSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class AirplaneTypeListSerializer(AirplaneTypeSerializer):
+class AirplaneTypeListRetrieveSerializer(AirplaneTypeSerializer):
     """Serializer for listing AirplaneType instances with count of related airplanes."""
     airplanes_count = serializers.IntegerField(read_only=True)
 
@@ -72,7 +72,7 @@ class AirplaneListSerializer(serializers.ModelSerializer):
 
 class AirplaneDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed Airplane information including airplane type details."""
-    airplane_type = AirplaneTypeListSerializer(read_only=True)
+    airplane_type = AirplaneTypeListRetrieveSerializer(read_only=True)
 
     class Meta:
         model = Airplane
