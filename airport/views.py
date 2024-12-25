@@ -173,13 +173,10 @@ class AirportViewSet(BaseViewSet):
     search_fields = ("name", "closest_big_city")
     ordering_fields = ("name", "closest_big_city")
 
-    @method_decorator(cache_page(60 * 5))
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        return super().list(request, *args, **kwargs)
-
-    @method_decorator(cache_page(60 * 5))
-    def retrieve(self, request: Request, *args, **kwargs) -> Response:
-        return super().retrieve(request, *args, **kwargs)
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="airport_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
 
 
 @extend_schema_view(
@@ -270,13 +267,10 @@ class AirplaneTypeViewSet(BaseViewSet):
 
         return AirplaneTypeSerializer
 
-    @method_decorator(cache_page(60 * 5))
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        return super().list(request, *args, **kwargs)
-
-    @method_decorator(cache_page(60 * 5))
-    def retrieve(self, request: Request, *args, **kwargs) -> Response:
-        return super().retrieve(request, *args, **kwargs)
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="airplane_type_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
 
 
 @extend_schema_view(
@@ -367,6 +361,11 @@ class AirplaneViewSet(BaseViewSet):
             return AirplaneImageSerializer
 
         return AirplaneSerializer
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="airplane_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
 
     @extend_schema(
         description="Upload an image for a specific airplane.",
@@ -486,6 +485,11 @@ class CrewViewSet(BaseViewSet):
 
         return CrewSerializer
 
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="crew_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -578,13 +582,10 @@ class RouteViewSet(BaseViewSet):
 
         return RouteSerializer
 
-    @method_decorator(cache_page(60 * 5))
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        return super().list(request, *args, **kwargs)
-
-    @method_decorator(cache_page(60 * 5))
-    def retrieve(self, request: Request, *args, **kwargs) -> Response:
-        return super().retrieve(request, *args, **kwargs)
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="route_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
 
 
 @extend_schema_view(
@@ -735,15 +736,10 @@ class FlightViewSet(BaseViewSet):
 
         return queryset.distinct()
 
-    @method_decorator(cache_page(60 * 5))
     @method_decorator(vary_on_cookie)
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        return super().list(request, *args, **kwargs)
-
-    @method_decorator(cache_page(60 * 5))
-    @method_decorator(vary_on_cookie)
-    def retrieve(self, request: Request, *args, **kwargs) -> Response:
-        return super().retrieve(request, *args, **kwargs)
+    @method_decorator(cache_page(60 * 5, key_prefix="flight_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
 
 
 @extend_schema_view(
@@ -854,6 +850,11 @@ class OrderViewSet(BaseViewSet):
     def perform_create(self, serializer: OrderSerializer) -> None:
         """Create order with tickets for current user."""
         serializer.save(user=self.request.user)
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="order_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
 
 
 @extend_schema_view(
@@ -971,3 +972,8 @@ class TicketViewSet(BaseViewSet):
             raise serializers.ValidationError(
                 {"order": "You can't create tickets for other user orders"}
             )
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60 * 5, key_prefix="ticket_view"))
+    def dispatch(self, request: Request, *args, **kwargs) -> Response:
+        return super().dispatch(request, *args, **kwargs)
