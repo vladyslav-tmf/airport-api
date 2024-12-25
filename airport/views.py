@@ -1,6 +1,9 @@
 from uuid import UUID
 
 from django.db.models import Count, QuerySet
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from drf_spectacular.utils import (
     OpenApiResponse,
     extend_schema,
@@ -170,6 +173,14 @@ class AirportViewSet(BaseViewSet):
     search_fields = ("name", "closest_big_city")
     ordering_fields = ("name", "closest_big_city")
 
+    @method_decorator(cache_page(60 * 5))
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 5))
+    def retrieve(self, request: Request, *args, **kwargs) -> Response:
+        return super().retrieve(request, *args, **kwargs)
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -258,6 +269,14 @@ class AirplaneTypeViewSet(BaseViewSet):
             return AirplaneTypeListRetrieveSerializer
 
         return AirplaneTypeSerializer
+
+    @method_decorator(cache_page(60 * 5))
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 5))
+    def retrieve(self, request: Request, *args, **kwargs) -> Response:
+        return super().retrieve(request, *args, **kwargs)
 
 
 @extend_schema_view(
@@ -559,6 +578,14 @@ class RouteViewSet(BaseViewSet):
 
         return RouteSerializer
 
+    @method_decorator(cache_page(60 * 5))
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 5))
+    def retrieve(self, request: Request, *args, **kwargs) -> Response:
+        return super().retrieve(request, *args, **kwargs)
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -707,6 +734,16 @@ class FlightViewSet(BaseViewSet):
             queryset = queryset.filter(airplane__airplane_type_id=airplane_type)
 
         return queryset.distinct()
+
+    @method_decorator(cache_page(60 * 5))
+    @method_decorator(vary_on_cookie)
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 5))
+    @method_decorator(vary_on_cookie)
+    def retrieve(self, request: Request, *args, **kwargs) -> Response:
+        return super().retrieve(request, *args, **kwargs)
 
 
 @extend_schema_view(
