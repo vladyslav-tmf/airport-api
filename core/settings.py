@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "jazzmin",
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
 
     # Build-in apps:
     "django.contrib.admin",
