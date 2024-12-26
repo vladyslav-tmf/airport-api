@@ -2,7 +2,16 @@ from django.core.cache import cache
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from airport.models import Airplane, AirplaneType, Airport, Crew, Flight, Order, Route, Ticket
+from airport.models import (
+    Airplane,
+    AirplaneType,
+    Airport,
+    Crew,
+    Flight,
+    Order,
+    Route,
+    Ticket,
+)
 
 
 @receiver((post_save, post_delete), sender=Airport)
@@ -27,7 +36,7 @@ def invalidate_airplane_type_cache(
 
 
 @receiver((post_save, post_delete), sender=Airplane)
-def invalidate_airplane_type_cache(
+def invalidate_airplane_cache(
     sender: type[Airplane],
     instance: Airplane,
     **kwargs,

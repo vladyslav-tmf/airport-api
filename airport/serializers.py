@@ -294,6 +294,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
             "order",
         )
 
+
 class OrderSerializer(serializers.ModelSerializer):
     """Serializer for Order model with nested tickets creation."""
     tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)

@@ -24,8 +24,8 @@ class AirportFilter(filters.FilterSet):
 
 class AirplaneTypeFilter(filters.FilterSet):
     """FilterSet for AirplaneType model."""
-
     name = filters.CharFilter(lookup_expr="icontains")
+
     class Meta:
         model = AirplaneType
         fields = ("name",)
