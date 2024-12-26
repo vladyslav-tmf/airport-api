@@ -22,13 +22,13 @@ class AirportAdmin(admin.ModelAdmin):
 
 
 @admin.register(AirplaneType)
-class AirplaneType(admin.ModelAdmin):
+class AirplaneTypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
 
 
 @admin.register(Airplane)
-class Airplane(admin.ModelAdmin):
+class AirplaneAdmin(admin.ModelAdmin):
     list_display = ("name", "airplane_type", "rows", "seats_in_row", "total_seats")
     list_filter = ("airplane_type",)
     search_fields = ("name", "airplane_type__name")
