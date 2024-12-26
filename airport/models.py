@@ -70,7 +70,7 @@ class Crew(TimestampedUUIDBaseModel):
         verbose_name_plural = "crew"
 
     def __str__(self) -> str:
-        return f"{self.first_name} {self.last_name}"
+        return self.full_name
 
 
 class Route(TimestampedUUIDBaseModel):
