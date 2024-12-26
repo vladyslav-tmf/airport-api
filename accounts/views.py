@@ -26,13 +26,14 @@ User = get_user_model()
             ),
             status.HTTP_400_BAD_REQUEST: OpenApiResponse(
                 description="Data validation error.",
-            )
+            ),
         },
         tags=("Users",),
     )
 )
 class CreateUserView(generics.CreateAPIView):
     """Endpoint for user registration that creates a new user in the system."""
+
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
@@ -88,6 +89,7 @@ class CreateUserView(generics.CreateAPIView):
 )
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """Endpoint for retrieving and updating authenticated user's profile information."""
+
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 

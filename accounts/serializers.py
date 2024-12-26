@@ -8,6 +8,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the User model."""
+
     password = serializers.CharField(
         write_only=True,
         required=True,
@@ -18,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "email", "first_name", "last_name", "password", "is_staff")
-        read_only_fields = ("id", "is_staff",)
+        read_only_fields = ("id", "is_staff")
 
     def create(self, validated_data: dict):
         """Create a new user with encrypted password and return it."""

@@ -23,6 +23,7 @@ User = get_user_model()
 
 class AirportTests(TestCase):
     """Test the Airport model."""
+
     def setUp(self) -> None:
         self.airport = Airport.objects.create(
             name="Test Airport",
@@ -57,6 +58,7 @@ class AirportTests(TestCase):
 
 class AirplaneTypeTests(TestCase):
     """Test the AirplaneType model."""
+
     def setUp(self) -> None:
         self.airplane_type = AirplaneType.objects.create(name="Test Type")
 
@@ -72,6 +74,7 @@ class AirplaneTypeTests(TestCase):
 
 class AirplaneTests(TestCase):
     """Test the Airplane model."""
+
     def setUp(self) -> None:
         self.airplane_type = AirplaneType.objects.create(name="Test Type")
         self.airplane = Airplane.objects.create(
@@ -114,6 +117,7 @@ class AirplaneTests(TestCase):
 
 class CrewTests(TestCase):
     """Test the Crew model."""
+
     def setUp(self) -> None:
         self.crew = Crew.objects.create(
             first_name="Test",
@@ -147,6 +151,7 @@ class CrewTests(TestCase):
 
 class RouteTests(TestCase):
     """Test the Route model."""
+
     def setUp(self) -> None:
         self.airport1 = Airport.objects.create(
             name="Airport 1",
@@ -199,6 +204,7 @@ class RouteTests(TestCase):
 
 class FlightTests(TestCase):
     """Test the Flight model."""
+
     def setUp(self) -> None:
         self.airport1 = Airport.objects.create(
             name="Airport 1",
@@ -274,6 +280,7 @@ class FlightTests(TestCase):
 
 class OrderTests(TestCase):
     """Test the Order model."""
+
     def setUp(self) -> None:
         self.user = User.objects.create_user(
             email="test@test.com",
@@ -298,6 +305,7 @@ class OrderTests(TestCase):
 
 class TicketTests(TestCase):
     """Test the Ticket model."""
+
     def setUp(self) -> None:
         self.user = User.objects.create_user(
             email="test@test.com",

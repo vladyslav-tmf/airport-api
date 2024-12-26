@@ -41,6 +41,7 @@ from airport.serializers import (
 
 class SerializerTestCase(TestCase):
     """Base test case class for serializer tests."""
+
     def setUp(self) -> None:
         """Set up test data for all serializer tests."""
         self.user = get_user_model().objects.create_user(
@@ -97,6 +98,7 @@ class SerializerTestCase(TestCase):
 
 class AirportSerializerTests(SerializerTestCase):
     """Test cases for Airport serializers."""
+
     def test_airport_serializer(self) -> None:
         """Test AirportSerializer."""
         serializer = AirportSerializer(self.airport)
@@ -110,6 +112,7 @@ class AirportSerializerTests(SerializerTestCase):
 
 class AirplaneTypeSerializerTests(SerializerTestCase):
     """Test cases for AirplaneType serializers."""
+
     def test_airplane_type_serializer(self) -> None:
         """Test AirplaneTypeSerializer."""
         serializer = AirplaneTypeSerializer(self.airplane_type)
@@ -131,6 +134,7 @@ class AirplaneTypeSerializerTests(SerializerTestCase):
 
 class AirplaneSerializerTests(SerializerTestCase):
     """Test cases for Airplane serializers."""
+
     def test_airplane_serializer(self) -> None:
         """Test AirplaneSerializer."""
         serializer = AirplaneSerializer(self.airplane)
@@ -188,6 +192,7 @@ class AirplaneSerializerTests(SerializerTestCase):
 
 class CrewSerializerTests(SerializerTestCase):
     """Test cases for Crew serializers."""
+
     def test_crew_serializer(self) -> None:
         """Test CrewSerializer."""
         serializer = CrewSerializer(self.crew)
@@ -210,6 +215,7 @@ class CrewSerializerTests(SerializerTestCase):
 
 class RouteSerializerTests(SerializerTestCase):
     """Test cases for Route serializers."""
+
     def test_route_serializer(self) -> None:
         """Test RouteSerializer."""
         serializer = RouteSerializer(self.route)
@@ -278,6 +284,7 @@ class RouteSerializerTests(SerializerTestCase):
 
 class FlightSerializerTests(SerializerTestCase):
     """Test cases for Flight serializers."""
+
     def test_flight_serializer(self) -> None:
         """Test FlightSerializer."""
         serializer = FlightSerializer(self.flight)
@@ -344,10 +351,12 @@ class FlightSerializerTests(SerializerTestCase):
             ),
             "arrival_time": timezone.localtime(self.flight.arrival_time).isoformat(),
             "available_seats": 59,
-            "crew": [{
-                "id": str(self.crew.id),
-                "full_name": "Test Crew",
-            }],
+            "crew": [
+                {
+                    "id": str(self.crew.id),
+                    "full_name": "Test Crew",
+                }
+            ],
         }
         self.assertEqual(serializer.data, expected_data)
 
@@ -367,18 +376,21 @@ class FlightSerializerTests(SerializerTestCase):
 
 class OrderSerializerTests(SerializerTestCase):
     """Test cases for Order serializers."""
+
     def test_order_serializer(self) -> None:
         """Test OrderSerializer."""
         serializer = OrderSerializer(self.order)
         expected_data = {
             "id": str(self.order.id),
             "created_at": timezone.localtime(self.order.created_at).isoformat(),
-            "tickets": [{
-                "id": str(self.ticket.id),
-                "row": 1,
-                "seat": 1,
-                "flight": self.flight.id,
-            }],
+            "tickets": [
+                {
+                    "id": str(self.ticket.id),
+                    "row": 1,
+                    "seat": 1,
+                    "flight": self.flight.id,
+                }
+            ],
         }
         self.assertEqual(serializer.data, expected_data)
 
@@ -403,6 +415,7 @@ class OrderSerializerTests(SerializerTestCase):
 
 class TicketSerializerTests(SerializerTestCase):
     """Test cases for Ticket serializers."""
+
     def test_ticket_serializer(self) -> None:
         """Test TicketSerializer."""
         serializer = TicketSerializer(self.ticket)
@@ -466,10 +479,12 @@ class TicketSerializerTests(SerializerTestCase):
                     timezone.localtime(self.flight.arrival_time).isoformat()
                 ),
                 "available_seats": 59,
-                "crew": [{
-                    "id": str(self.crew.id),
-                    "full_name": "Test Crew",
-                }],
+                "crew": [
+                    {
+                        "id": str(self.crew.id),
+                        "full_name": "Test Crew",
+                    }
+                ],
             },
             "order": self.ticket.order.id,
         }

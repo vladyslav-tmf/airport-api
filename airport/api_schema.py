@@ -4,9 +4,7 @@ from rest_framework import status
 
 
 VALIDATION_400_RESPONSE = {
-    status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-        description="Invalid data provided."
-    )
+    status.HTTP_400_BAD_REQUEST: OpenApiResponse(description="Invalid data provided.")
 }
 
 UNAUTHORIZED_401_RESPONSE = {

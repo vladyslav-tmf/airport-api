@@ -9,6 +9,7 @@ class IsAdminOrReadOnly(BasePermission):
     - Admins all operations except DELETE.
     - All users read-only access.
     """
+
     def has_permission(self, request: Request, view: APIView) -> bool:
         if request.method in SAFE_METHODS:
             return True
@@ -29,6 +30,7 @@ class IsAdminOrAuthenticatedReadOnly(BasePermission):
     - Authenticated users read-only access.
     - Anonymous users no access.
     """
+
     def has_permission(self, request: Request, view: APIView) -> bool:
         if not request.user.is_authenticated:
             return False
@@ -49,6 +51,7 @@ class IsAdminOrAuthenticatedCreateOnly(BasePermission):
     - Authenticated users read and create access.
     - Anonymous users no access.
     """
+
     def has_permission(self, request: Request, view: APIView) -> bool:
         if not request.user.is_authenticated:
             return False

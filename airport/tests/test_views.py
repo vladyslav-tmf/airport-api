@@ -33,6 +33,7 @@ from airport.serializers import (
 
 class ViewSetTest(TestCase):
     """Base test case class for viewset tests."""
+
     def setUp(self) -> None:
         """Set up test data."""
         self.client = APIClient()
@@ -106,6 +107,7 @@ class ViewSetTest(TestCase):
 
 class AirportViewSetTests(ViewSetTest):
     """Test cases for Airport viewset."""
+
     def test_list_airports(self) -> None:
         """Test listing airports."""
         response = self.client.get(reverse("airport:airport-list"))
@@ -156,8 +158,7 @@ class AirportViewSetTests(ViewSetTest):
             "closest_big_city": "Updated City",
         }
         response = self.client.put(
-            reverse("airport:airport-detail", args=[self.airport.id]),
-            payload
+            reverse("airport:airport-detail", args=[self.airport.id]), payload
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -182,8 +183,7 @@ class AirportViewSetTests(ViewSetTest):
             "closest_big_city": "Updated City",
         }
         response = self.client.put(
-            reverse("airport:airport-detail", args=[self.airport.id]),
-            payload
+            reverse("airport:airport-detail", args=[self.airport.id]), payload
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -199,6 +199,7 @@ class AirportViewSetTests(ViewSetTest):
 
 class AirplaneTypeViewSetTests(ViewSetTest):
     """Test cases for AirplaneType viewset."""
+
     def test_list_airplane_types(self) -> None:
         """Test listing airplane types."""
         response = self.client.get(reverse("airport:airplane-type-list"))
@@ -217,15 +218,10 @@ class AirplaneTypeViewSetTests(ViewSetTest):
         """Test creating airplane type by admin."""
         self.client.force_authenticate(self.admin)
         payload = {"name": "New Type"}
-        response = self.client.post(
-            reverse("airport:airplane-type-list"),
-            payload
-        )
+        response = self.client.post(reverse("airport:airplane-type-list"), payload)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(
-            AirplaneType.objects.filter(name=payload["name"]).exists()
-        )
+        self.assertTrue(AirplaneType.objects.filter(name=payload["name"]).exists())
 
     def test_update_airplane_type(self) -> None:
         """Test updating airplane type."""
@@ -233,7 +229,7 @@ class AirplaneTypeViewSetTests(ViewSetTest):
         payload = {"name": "Updated Type"}
         response = self.client.put(
             reverse("airport:airplane-type-detail", args=[self.airplane_type.id]),
-            payload
+            payload,
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -243,6 +239,7 @@ class AirplaneTypeViewSetTests(ViewSetTest):
 
 class AirplaneViewSetTests(ViewSetTest):
     """Test cases for Airplane viewset."""
+
     def test_list_airplanes(self) -> None:
         """Test listing airplanes."""
         response = self.client.get(reverse("airport:airplane-list"))
@@ -280,17 +277,12 @@ class AirplaneViewSetTests(ViewSetTest):
             "name": "New Airplane",
             "rows": 20,
             "seats_in_row": 4,
-            "airplane_type": self.airplane_type.id
+            "airplane_type": self.airplane_type.id,
         }
-        response = self.client.post(
-            reverse("airport:airplane-list"),
-            payload
-        )
+        response = self.client.post(reverse("airport:airplane-list"), payload)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(
-            Airplane.objects.filter(name=payload["name"]).exists()
-        )
+        self.assertTrue(Airplane.objects.filter(name=payload["name"]).exists())
 
     def test_upload_airplane_image(self) -> None:
         """Test uploading airplane image."""
@@ -300,7 +292,7 @@ class AirplaneViewSetTests(ViewSetTest):
             response = self.client.post(
                 reverse("airport:airplane-upload-image", args=[self.airplane.id]),
                 {"image": image_file},
-                format="multipart"
+                format="multipart",
             )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -313,7 +305,7 @@ class AirplaneViewSetTests(ViewSetTest):
             response = self.client.post(
                 reverse("airport:airplane-upload-image", args=[self.airplane.id]),
                 {"image": image_file},
-                format="multipart"
+                format="multipart",
             )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -321,6 +313,7 @@ class AirplaneViewSetTests(ViewSetTest):
 
 class CrewViewSetTests(ViewSetTest):
     """Test cases for Crew viewset."""
+
     def test_list_crew(self) -> None:
         """Test listing crew members."""
         response = self.client.get(reverse("airport:crew-list"))
@@ -334,32 +327,27 @@ class CrewViewSetTests(ViewSetTest):
                     "full_name": crew.full_name,
                     "flights_count": crew.flights.count(),
                 }
-                for crew in Crew.objects.all()]
+                for crew in Crew.objects.all()
+            ],
         )
 
     def test_create_crew(self) -> None:
         """Test creating crew member."""
         self.client.force_authenticate(self.admin)
-        payload = {
-            "first_name": "New",
-            "last_name": "Crew"
-        }
-        response = self.client.post(
-            reverse("airport:crew-list"),
-            payload
-        )
+        payload = {"first_name": "New", "last_name": "Crew"}
+        response = self.client.post(reverse("airport:crew-list"), payload)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(
             Crew.objects.filter(
-                first_name=payload["first_name"],
-                last_name=payload["last_name"]
+                first_name=payload["first_name"], last_name=payload["last_name"]
             ).exists()
         )
 
 
 class RouteViewSetTests(ViewSetTest):
     """Test cases for Route viewset."""
+
     def test_list_routes(self) -> None:
         """Test listing routes."""
         response = self.client.get(reverse("airport:route-list"))
@@ -402,7 +390,7 @@ class RouteViewSetTests(ViewSetTest):
         payload = {
             "source": self.airport.id,
             "destination": new_airport.id,
-            "distance": 2000
+            "distance": 2000,
         }
         response = self.client.post(
             reverse("airport:route-list"),
@@ -411,13 +399,12 @@ class RouteViewSetTests(ViewSetTest):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(
-            Route.objects.filter(distance=payload["distance"]).exists()
-        )
+        self.assertTrue(Route.objects.filter(distance=payload["distance"]).exists())
 
 
 class FlightViewSetTests(ViewSetTest):
     """Test cases for Flight viewset."""
+
     def test_list_flights(self) -> None:
         """Test listing flights."""
         response = self.client.get(reverse("airport:flight-list"))
@@ -449,12 +436,10 @@ class FlightViewSetTests(ViewSetTest):
             "airplane": self.airplane.id,
             "departure_time": departure.isoformat(),
             "arrival_time": arrival.isoformat(),
-            "crew": [self.crew.id]
+            "crew": [self.crew.id],
         }
         response = self.client.post(
-            reverse("airport:flight-list"),
-            payload,
-            format="json"
+            reverse("airport:flight-list"), payload, format="json"
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -464,6 +449,7 @@ class FlightViewSetTests(ViewSetTest):
 
 class OrderViewSetTests(ViewSetTest):
     """Test cases for Order viewset."""
+
     def test_list_orders(self) -> None:
         """Test listing orders."""
         response = self.client.get(reverse("airport:order-list"))
@@ -513,6 +499,7 @@ class OrderViewSetTests(ViewSetTest):
 
 class TicketViewSetTests(ViewSetTest):
     """Test cases for Ticket viewset."""
+
     def test_list_tickets(self) -> None:
         """Test listing tickets."""
         response = self.client.get(reverse("airport:ticket-list"))

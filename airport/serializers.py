@@ -16,6 +16,7 @@ from airport.models import (
 
 class AirportSerializer(serializers.ModelSerializer):
     """Serializer for Airport model."""
+
     class Meta:
         model = Airport
         fields = ("id", "name", "closest_big_city")
@@ -23,6 +24,7 @@ class AirportSerializer(serializers.ModelSerializer):
 
 class AirplaneTypeSerializer(serializers.ModelSerializer):
     """Serializer for AirplaneType model."""
+
     class Meta:
         model = AirplaneType
         fields = ("id", "name")
@@ -30,6 +32,7 @@ class AirplaneTypeSerializer(serializers.ModelSerializer):
 
 class AirplaneTypeListRetrieveSerializer(AirplaneTypeSerializer):
     """Serializer for listing AirplaneType instances with count of related airplanes."""
+
     airplanes_count = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -39,6 +42,7 @@ class AirplaneTypeListRetrieveSerializer(AirplaneTypeSerializer):
 
 class AirplaneSerializer(serializers.ModelSerializer):
     """Serializer for Airplane model."""
+
     class Meta:
         model = Airplane
         fields = (
@@ -54,6 +58,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
 
 class AirplaneListSerializer(serializers.ModelSerializer):
     """Serializer for listing Airplane instances with airplane type name."""
+
     airplane_type_name = serializers.CharField(
         source="airplane_type.name", read_only=True
     )
@@ -73,6 +78,7 @@ class AirplaneListSerializer(serializers.ModelSerializer):
 
 class AirplaneDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed Airplane information including airplane type details."""
+
     airplane_type = AirplaneTypeListRetrieveSerializer(read_only=True)
 
     class Meta:
@@ -90,6 +96,7 @@ class AirplaneDetailSerializer(serializers.ModelSerializer):
 
 class AirplaneImageSerializer(serializers.ModelSerializer):
     """Serializer for Airplane image upload."""
+
     class Meta:
         model = Airplane
         fields = ("id", "image")
@@ -97,6 +104,7 @@ class AirplaneImageSerializer(serializers.ModelSerializer):
 
 class CrewSerializer(serializers.ModelSerializer):
     """Serializer for Crew model."""
+
     class Meta:
         model = Crew
         fields = ("id", "first_name", "last_name")
@@ -104,6 +112,7 @@ class CrewSerializer(serializers.ModelSerializer):
 
 class CrewListSerializer(serializers.ModelSerializer):
     """Serializer for listing Crew members with count of their flights."""
+
     flights_count = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -113,6 +122,7 @@ class CrewListSerializer(serializers.ModelSerializer):
 
 class RouteSerializer(serializers.ModelSerializer):
     """Serializer for Route model with validation."""
+
     class Meta:
         model = Route
         fields = ("id", "source", "destination", "distance")
@@ -136,6 +146,7 @@ class RouteSerializer(serializers.ModelSerializer):
 
 class RouteListSerializer(serializers.ModelSerializer):
     """Serializer for listing Routes with source and destination airport names."""
+
     source_name = serializers.CharField(source="source.name", read_only=True)
     destination_name = serializers.CharField(source="destination.name", read_only=True)
 
@@ -146,6 +157,7 @@ class RouteListSerializer(serializers.ModelSerializer):
 
 class RouteDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed Route information including full airport details."""
+
     source = AirportSerializer(read_only=True)
     destination = AirportSerializer(read_only=True)
 
@@ -156,6 +168,7 @@ class RouteDetailSerializer(serializers.ModelSerializer):
 
 class FlightSerializer(serializers.ModelSerializer):
     """Serializer for Flight model with time validation."""
+
     class Meta:
         model = Flight
         fields = (
@@ -179,15 +192,12 @@ class FlightSerializer(serializers.ModelSerializer):
 
 class FlightListSerializer(serializers.ModelSerializer):
     """Serializer for listing Flights with related information."""
-    source_airport = serializers.CharField(
-        source="route.source.name", read_only=True
-        )
+
+    source_airport = serializers.CharField(source="route.source.name", read_only=True)
     destination_airport = serializers.CharField(
         source="route.destination.name", read_only=True
-        )
-    airplane_name = serializers.CharField(
-        source="airplane.name", read_only=True
-        )
+    )
+    airplane_name = serializers.CharField(source="airplane.name", read_only=True)
     crew_names = serializers.SerializerMethodField()
 
     class Meta:
@@ -210,6 +220,7 @@ class FlightListSerializer(serializers.ModelSerializer):
 
 class FlightDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed Flight information including related objects."""
+
     route = RouteDetailSerializer(read_only=True)
     airplane = AirplaneListSerializer(read_only=True)
     crew = CrewListSerializer(many=True, read_only=True)
@@ -229,6 +240,7 @@ class FlightDetailSerializer(serializers.ModelSerializer):
 
 class TicketSerializer(serializers.ModelSerializer):
     """Serializer for Ticket model with seat and flight validation."""
+
     class Meta:
         model = Ticket
         fields = (
@@ -248,7 +260,7 @@ class TicketSerializer(serializers.ModelSerializer):
             attrs["row"],
             attrs["seat"],
             attrs["flight"].airplane,
-            serializers.ValidationError
+            serializers.ValidationError,
         )
 
         if attrs["flight"].departure_time <= timezone.now():
@@ -261,12 +273,13 @@ class TicketSerializer(serializers.ModelSerializer):
 
 class TicketListSerializer(serializers.ModelSerializer):
     """Serializer for listing Tickets with source and destination cities."""
+
     source_city = serializers.CharField(
         source="flight.route.source.closest_big_city", read_only=True
-        )
+    )
     destination_city = serializers.CharField(
         source="flight.route.destination.closest_big_city", read_only=True
-        )
+    )
 
     class Meta:
         model = Ticket
@@ -282,6 +295,7 @@ class TicketListSerializer(serializers.ModelSerializer):
 
 class TicketDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed Ticket information including flight details."""
+
     flight = FlightDetailSerializer(read_only=True)
 
     class Meta:
@@ -297,6 +311,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     """Serializer for Order model with nested tickets creation."""
+
     tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
 
     class Meta:
@@ -317,6 +332,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderListSerializer(serializers.ModelSerializer):
     """Serializer for listing Orders with user and tickets information."""
+
     user_full_name = serializers.CharField(source="user.get_full_name", read_only=True)
     tickets_count = serializers.IntegerField(source="tickets.count", read_only=True)
 
@@ -327,6 +343,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed Order information including user and tickets details."""
+
     user_full_name = serializers.CharField(source="user.get_full_name", read_only=True)
     tickets = TicketDetailSerializer(many=True, read_only=True)
 

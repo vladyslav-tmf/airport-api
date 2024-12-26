@@ -33,6 +33,7 @@ User = get_user_model()
 
 class AdminSiteTestCase(TestCase):
     """Base test case class for admin site tests."""
+
     def setUp(self) -> None:
         """Set up test data."""
         self.site = AdminSite()
@@ -94,6 +95,7 @@ class AdminSiteTestCase(TestCase):
 
 class AirportAdminTests(AdminSiteTestCase):
     """Test cases for Airport admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -137,10 +139,7 @@ class AirportAdminTests(AdminSiteTestCase):
         """Test adding and editing objects through admin."""
         add_url = reverse("admin:airport_airport_add")
         response = self.client.post(
-            add_url, {
-                "name": "New Airport",
-                "closest_big_city": "New City"
-            }
+            add_url, {"name": "New Airport", "closest_big_city": "New City"}
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Airport.objects.filter(name="New Airport").exists())
@@ -148,10 +147,7 @@ class AirportAdminTests(AdminSiteTestCase):
         airport = Airport.objects.get(name="New Airport")
         edit_url = reverse("admin:airport_airport_change", args=[airport.id])
         response = self.client.post(
-            edit_url, {
-                "name": "Updated Airport",
-                "closest_big_city": "Updated City"
-            }
+            edit_url, {"name": "Updated Airport", "closest_big_city": "Updated City"}
         )
         self.assertEqual(response.status_code, 302)
         airport.refresh_from_db()
@@ -160,6 +156,7 @@ class AirportAdminTests(AdminSiteTestCase):
 
 class AirplaneTypeAdminTests(AdminSiteTestCase):
     """Test cases for AirplaneType admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -176,6 +173,7 @@ class AirplaneTypeAdminTests(AdminSiteTestCase):
 
 class AirplaneAdminTests(AdminSiteTestCase):
     """Test cases for Airplane admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -202,6 +200,7 @@ class AirplaneAdminTests(AdminSiteTestCase):
 
 class CrewAdminTests(AdminSiteTestCase):
     """Test cases for Crew admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -224,6 +223,7 @@ class CrewAdminTests(AdminSiteTestCase):
 
 class RouteAdminTests(AdminSiteTestCase):
     """Test cases for Route admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -253,6 +253,7 @@ class RouteAdminTests(AdminSiteTestCase):
 
 class FlightAdminTests(AdminSiteTestCase):
     """Test cases for Flight admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -292,6 +293,7 @@ class FlightAdminTests(AdminSiteTestCase):
 
 class OrderAdminTests(AdminSiteTestCase):
     """Test cases for Order admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()
@@ -351,6 +353,7 @@ class OrderAdminTests(AdminSiteTestCase):
 
 class TicketAdminTests(AdminSiteTestCase):
     """Test cases for Ticket admin interface."""
+
     def setUp(self) -> None:
         """Set up test data."""
         super().setUp()

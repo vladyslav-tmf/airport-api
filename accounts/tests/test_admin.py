@@ -37,8 +37,7 @@ class UserAdminTests(TestCase):
         response = self.client.get(reverse("admin:accounts_user_changelist"))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response,
-            f"/admin/login/?next={reverse('admin:accounts_user_changelist')}"
+            response, f"/admin/login/?next={reverse('admin:accounts_user_changelist')}"
         )
 
         self.client.login(email="test@test.com", password="testpass123")

@@ -14,6 +14,7 @@ from airport.models import (
 
 class AirportFilter(filters.FilterSet):
     """FilterSet for Airport model."""
+
     name = filters.CharFilter(lookup_expr="icontains")
     closest_big_city = filters.CharFilter(lookup_expr="icontains")
 
@@ -24,6 +25,7 @@ class AirportFilter(filters.FilterSet):
 
 class AirplaneTypeFilter(filters.FilterSet):
     """FilterSet for AirplaneType model."""
+
     name = filters.CharFilter(lookup_expr="icontains")
 
     class Meta:
@@ -33,6 +35,7 @@ class AirplaneTypeFilter(filters.FilterSet):
 
 class AirplaneFilter(filters.FilterSet):
     """FilterSet for Airplane model."""
+
     name = filters.CharFilter(lookup_expr="icontains")
     airplane_type_name = filters.CharFilter(
         field_name="airplane_type__name", lookup_expr="icontains"
@@ -60,6 +63,7 @@ class AirplaneFilter(filters.FilterSet):
 
 class CrewFilter(filters.FilterSet):
     """FilterSet for Crew model."""
+
     first_name = filters.CharFilter(lookup_expr="icontains")
     last_name = filters.CharFilter(lookup_expr="icontains")
 
@@ -70,6 +74,7 @@ class CrewFilter(filters.FilterSet):
 
 class RouteFilter(filters.FilterSet):
     """FilterSet for Route model."""
+
     source_name = filters.CharFilter(field_name="source__name", lookup_expr="icontains")
     destination_name = filters.CharFilter(
         field_name="destination__name", lookup_expr="icontains"
@@ -91,6 +96,7 @@ class RouteFilter(filters.FilterSet):
 
 class FlightFilter(filters.FilterSet):
     """FilterSet for Flight model."""
+
     route_source_name = filters.CharFilter(
         field_name="route__source__name", lookup_expr="icontains"
     )
@@ -128,6 +134,7 @@ class FlightFilter(filters.FilterSet):
 
 class OrderFilter(filters.FilterSet):
     """FilterSet for Order model."""
+
     created_at = filters.DateTimeFilter()
     created_at__gt = filters.DateTimeFilter(field_name="created_at", lookup_expr="gt")
     created_at__lt = filters.DateTimeFilter(field_name="created_at", lookup_expr="lt")
@@ -139,6 +146,7 @@ class OrderFilter(filters.FilterSet):
 
 class TicketFilter(filters.FilterSet):
     """FilterSet for Ticket model."""
+
     flight_route_source_name = filters.CharFilter(
         field_name="flight__route__source__name", lookup_expr="icontains"
     )

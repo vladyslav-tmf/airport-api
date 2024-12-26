@@ -105,9 +105,7 @@ class Route(TimestampedUUIDBaseModel):
 
 
 class Flight(TimestampedUUIDBaseModel):
-    route = models.ForeignKey(
-        Route, on_delete=models.CASCADE, related_name="flights"
-    )
+    route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name="flights")
     airplane = models.ForeignKey(
         Airplane, on_delete=models.CASCADE, related_name="flights"
     )
@@ -147,18 +145,14 @@ class Order(TimestampedUUIDBaseModel):
         ordering = ("-created_at",)
 
     def __str__(self) -> str:
-        return f"Order \"{self.id}\" by {self.user.get_full_name()}"
+        return f'Order "{self.id}" by {self.user.get_full_name()}'
 
 
 class Ticket(TimestampedUUIDBaseModel):
     row = models.PositiveSmallIntegerField()
     seat = models.PositiveSmallIntegerField()
-    flight = models.ForeignKey(
-        Flight, on_delete=models.CASCADE, related_name="tickets"
-    )
-    order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name="tickets"
-    )
+    flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="tickets")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="tickets")
 
     @property
     def seat_number(self) -> str:

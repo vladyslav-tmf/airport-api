@@ -11,6 +11,7 @@ User = get_user_model()
 
 class PublicUserApiTests(TestCase):
     """Test the public features of the user API."""
+
     def setUp(self) -> None:
         self.client = APIClient()
         self.user_data = {
@@ -52,9 +53,7 @@ class PublicUserApiTests(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        user_exists = (
-            User.objects.filter(email=payload["email"]).exists()
-        )
+        user_exists = User.objects.filter(email=payload["email"]).exists()
         self.assertFalse(user_exists)
 
     def test_create_user_invalid_name_fields(self) -> None:
@@ -115,6 +114,7 @@ class PublicUserApiTests(TestCase):
 
 class PrivateUserApiTests(TestCase):
     """Test API requests that require authentication."""
+
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(
@@ -185,6 +185,7 @@ class PrivateUserApiTests(TestCase):
 
 class TokenBlacklistTests(TestCase):
     """Test token blacklist (logout) functionality."""
+
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(
@@ -222,6 +223,7 @@ class TokenBlacklistTests(TestCase):
 
 class TokenRefreshTests(TestCase):
     """Test token refresh functionality."""
+
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(
@@ -254,6 +256,7 @@ class TokenRefreshTests(TestCase):
 
 class TokenVerifyTests(TestCase):
     """Test token verification functionality."""
+
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(

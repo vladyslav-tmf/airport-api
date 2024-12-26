@@ -9,6 +9,7 @@ class CustomUserCreationForm(UserCreationForm):
     Extends the build-in UserCreationForm to handle custom user model with
     email authentication instead of username.
     """
+
     class Meta:
         model = get_user_model()
         fields = ("email", "first_name", "last_name")

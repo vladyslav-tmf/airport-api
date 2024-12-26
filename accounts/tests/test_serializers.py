@@ -84,11 +84,7 @@ class UserSerializerTests(TestCase):
         """Test partial update of user."""
         user = self.serializer.save()
 
-        serializer = UserSerializer(
-            user,
-            data={"first_name": "NewName"},
-            partial=True
-        )
+        serializer = UserSerializer(user, data={"first_name": "NewName"}, partial=True)
         self.assertTrue(serializer.is_valid())
         updated_user = serializer.save()
 

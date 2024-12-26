@@ -5,6 +5,7 @@ from django.db import models
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
+
     use_in_migrations = True
 
     def _create_user(self, email: str, password: str, **extra_fields) -> "User":
@@ -44,6 +45,7 @@ class User(AbstractUser):
     the default username fields with email as the unique identifier.
     Requires first_name and last_name fields to be set.
     """
+
     username = None
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255)
