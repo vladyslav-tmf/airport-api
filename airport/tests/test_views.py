@@ -21,13 +21,13 @@ from airport.models import (
 )
 from airport.serializers import (
     AirplaneSerializer,
-    AirplaneTypeListRetrieveSerializer, AirplaneTypeSerializer,
+    AirplaneTypeListRetrieveSerializer,
     AirportSerializer,
-    CrewListSerializer, CrewSerializer,
-    FlightListSerializer, FlightSerializer,
-    OrderListSerializer, OrderSerializer,
-    RouteListSerializer, RouteSerializer,
-    TicketDetailSerializer, TicketListSerializer, TicketSerializer,
+    FlightListSerializer,
+    OrderListSerializer,
+    RouteListSerializer,
+    TicketDetailSerializer,
+    TicketListSerializer,
 )
 
 
@@ -175,7 +175,6 @@ class AirportViewSetTests(ViewSetTest):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(Airport.objects.filter(id=self.airport.id).exists())
 
-
     def test_update_airport_forbidden_for_regular_user(self) -> None:
         """Test updating airport is forbidden for regular user."""
         payload = {
@@ -307,7 +306,6 @@ class AirplaneViewSetTests(ViewSetTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.airplane.refresh_from_db()
         self.assertTrue(self.airplane.image)
-
 
     def test_upload_image_forbidden_for_regular_user(self) -> None:
         """Test uploading airplane image is forbidden for regular user."""

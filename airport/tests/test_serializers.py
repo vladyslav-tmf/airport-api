@@ -285,7 +285,9 @@ class FlightSerializerTests(SerializerTestCase):
             "id": str(self.flight.id),
             "route": self.route.id,
             "airplane": self.airplane.id,
-            "departure_time": timezone.localtime(self.flight.departure_time).isoformat(),
+            "departure_time": (
+                timezone.localtime(self.flight.departure_time).isoformat()
+            ),
             "arrival_time": timezone.localtime(self.flight.arrival_time).isoformat(),
             "available_seats": 59,
             "crew": [self.crew.id],
