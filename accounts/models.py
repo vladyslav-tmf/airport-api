@@ -56,3 +56,16 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ("last_name", "first_name")
+
+    def clean(self) -> None:
+        """Validate that first_name and last_name fields are set."""
+        if not self.first_name or not self.last_name:
+            raise ValueError("Both first_name and last_name are required.")
+
+    def save(self, *args, **kwargs) -> None:
+        """Call full_clean() before saving the user."""
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.get_full_name()
