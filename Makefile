@@ -4,20 +4,24 @@ install: ## Install dependencies
 
 .PHONY: migrate
 migrate:  ## Create and apply migrations
-	poetry run python manage.py makemigrations
-	poetry run python manage.py migrate
+	python manage.py makemigrations
+	python manage.py migrate
 
 .PHONY: run
 run: ## Run development server
-	poetry run python manage.py runserver
+	python manage.py runserver
 
 .PHONY: superuser
 superuser: ## Create superuser
-	poetry run python manage.py createsuperuser
+	python manage.py createsuperuser
 
 .PHONY: test
 test: ## Run tests
-	poetry run python manage.py test
+	python manage.py test
+
+.PHONY: load
+load: ## Load initial data
+	python manage.py loaddata airport_api_sample_data.json
 
 .PHONY: setup
 setup: install migrate superuser ## Complete project setup
