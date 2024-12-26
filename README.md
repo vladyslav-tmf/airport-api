@@ -14,7 +14,7 @@ Global Flight Tracking System - RESTful API service for real-time flight monitor
 - [API Documentation](#api-documentation)
 - [Database Structure](#database-structure)
 - [Testing](#testing)
-- [Trobleshooting](#troubleshooting)
+- [Troubleshooting](#troubleshooting)
 - [API Examples](#api-examples)
 
 ## 🌐 Overview
