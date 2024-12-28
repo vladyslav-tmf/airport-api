@@ -25,6 +25,12 @@ NOT_FOUND_404_RESPONSE = {
     )
 }
 
+SERVER_ERROR_500_RESPONSE = {
+    status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+        description="Internal server error."
+    )
+}
+
 PAGINATION_PARAMETERS = [
     OpenApiParameter(
         name="page",

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 
@@ -40,7 +41,7 @@ class UserManagerTests(TestCase):
 
     def test_create_user_without_email(self) -> None:
         """Test creating a user without email raises error."""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             User.objects.create_user(
                 email="",
                 password="testpass123",
@@ -50,7 +51,7 @@ class UserManagerTests(TestCase):
 
     def test_create_superuser_not_staff(self) -> None:
         """Test creating a superuser with is_staff=False raises error."""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             User.objects.create_superuser(
                 email="admin@test.com",
                 password="testpass123",
@@ -61,7 +62,7 @@ class UserManagerTests(TestCase):
 
     def test_create_superuser_not_superuser(self) -> None:
         """Test creating a superuser with is_superuser=False raises error."""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             User.objects.create_superuser(
                 email="admin@test.com",
                 password="testpass123",
@@ -100,7 +101,7 @@ class UserTests(TestCase):
 
     def test_user_required_fields(self) -> None:
         """Test required fields are enforced."""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             User.objects.create_user(
                 email="test3@test.com",
                 password="testpass123",

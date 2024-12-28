@@ -2,6 +2,11 @@ from django.contrib.auth import get_user_model
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+    TokenVerifySerializer,
+)
 from rest_framework_simplejwt.views import (
     TokenBlacklistView,
     TokenObtainPairView,
@@ -10,7 +15,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from accounts.serializers import UserSerializer
-
+from airport.api_schema import SERVER_ERROR_500_RESPONSE, UNAUTHORIZED_401_RESPONSE, VALIDATION_400_RESPONSE
 
 User = get_user_model()
 
@@ -24,9 +29,8 @@ User = get_user_model()
                 response=UserSerializer,
                 description="User successfully created.",
             ),
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Data validation error.",
-            ),
+            **VALIDATION_400_RESPONSE,
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Users",),
     )
@@ -46,9 +50,8 @@ class CreateUserView(generics.CreateAPIView):
                 response=UserSerializer,
                 description="User profile successfully retrieved.",
             ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated.",
-            ),
+            **UNAUTHORIZED_401_RESPONSE,
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Users",),
     ),
@@ -60,12 +63,9 @@ class CreateUserView(generics.CreateAPIView):
                 response=UserSerializer,
                 description="User profile successfully updated.",
             ),
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Data validation error.",
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated.",
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Users",),
     ),
@@ -77,24 +77,21 @@ class CreateUserView(generics.CreateAPIView):
                 response=UserSerializer,
                 description="User profile successfully updated.",
             ),
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
-                description="Data validation error.",
-            ),
-            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
-                description="User is not authenticated.",
-            ),
+            **VALIDATION_400_RESPONSE,
+            **UNAUTHORIZED_401_RESPONSE,
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Users",),
     ),
 )
 class ManageUserView(generics.RetrieveUpdateAPIView):
-    """Endpoint for retrieving and updating authenticated user's profile information."""
+    """Manage authenticated user's profile."""
 
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_object(self) -> User:
-        """Get currently authenticated user instance."""
+        """Get current user."""
         return self.request.user
 
 
@@ -103,18 +100,19 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
         description="Obtain JWT token pair.",
         responses={
             status.HTTP_200_OK: OpenApiResponse(
-                response=UserSerializer,
+                response=TokenObtainPairSerializer,
                 description="Successfully obtained JWT token pair.",
             ),
             status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
                 description="Invalid credentials provided.",
             ),
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Authentication",),
     )
 )
 class CustomTokenObtainPairView(TokenObtainPairView):
-    """Endpoint for obtaining JWT token pair."""
+    """JWT token pair endpoint."""
 
 
 @extend_schema_view(
@@ -122,18 +120,19 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         description="Obtain new access token using refresh token.",
         responses={
             status.HTTP_200_OK: OpenApiResponse(
-                response=UserSerializer,
+                response=TokenRefreshSerializer,
                 description="Successfully refresh access token using refresh token.",
             ),
             status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
                 description="Refresh token is invalid or expired.",
             ),
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Authentication",),
     )
 )
 class CustomTokenRefreshView(TokenRefreshView):
-    """Endpoint for refreshing access token using refresh token."""
+    """JWT token refresh endpoint."""
 
 
 @extend_schema_view(
@@ -141,17 +140,19 @@ class CustomTokenRefreshView(TokenRefreshView):
         description="Verify JWT token validity.",
         responses={
             status.HTTP_200_OK: OpenApiResponse(
+                response=TokenVerifySerializer,
                 description="JWT token is valid.",
             ),
             status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
                 description="JWT token is invalid or expired.",
             ),
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Authentication",),
     )
 )
 class CustomTokenVerifyView(TokenVerifyView):
-    """Endpoint for verifying JWT token."""
+    """JWT token verification endpoint."""
 
 
 @extend_schema_view(
@@ -164,9 +165,10 @@ class CustomTokenVerifyView(TokenVerifyView):
             status.HTTP_401_UNAUTHORIZED: OpenApiResponse(
                 description="JWT token is invalid or expired.",
             ),
+            **SERVER_ERROR_500_RESPONSE,
         },
         tags=("Authentication",),
     )
 )
 class CustomTokenBlacklistView(TokenBlacklistView):
-    """Endpoint for blacklisting JWT token (logout)."""
+    """JWT token blacklist (logout) endpoint."""
