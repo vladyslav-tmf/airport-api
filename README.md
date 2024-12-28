@@ -181,9 +181,6 @@ POSTGRES_DB=airport_db
 POSTGRES_USER=airport_user
 POSTGRES_PASSWORD=strong-password
 
-# Redis settings
-REDIS_URL=redis://redis:6379/1
-
 # pgAdmin settings
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=admin
