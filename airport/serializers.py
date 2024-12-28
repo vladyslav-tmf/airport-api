@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
@@ -255,17 +257,31 @@ class TicketSerializer(serializers.ModelSerializer):
         Validate ticket data:
         - Check if seat exists in airplane.
         - Check if flight is not in the past.
+        - Check if enough time before departure.
         """
-        Ticket.validate_ticket(
+        Ticket.validate_ticket_position(
             attrs["row"],
             attrs["seat"],
             attrs["flight"].airplane,
             serializers.ValidationError,
         )
 
-        if attrs["flight"].departure_time <= timezone.now():
+        now = timezone.now()
+        if attrs["flight"].departure_time <= now:
             raise serializers.ValidationError(
-                {"flight": "Cannot create ticket for past flights"}
+                {"flight": "Cannot create ticket. Flight has already departed"}
+            )
+
+        minimum_time_before_departure = timedelta(minutes=10)
+        if attrs["flight"].departure_time <= now + minimum_time_before_departure:
+            raise serializers.ValidationError(
+                {
+                    "flight": (
+                        "Warning: Flight departs in less than "
+                        f"{minimum_time_before_departure} minutes. "
+                        f"You not have enough time to board."
+                    )
+                }
             )
 
         return attrs

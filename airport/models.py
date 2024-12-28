@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -169,41 +171,56 @@ class Ticket(TimestampedUUIDBaseModel):
         ]
 
     @staticmethod
-    def validate_ticket(
+    def validate_ticket_position(
         row: int,
         seat: int,
         airplane: Airplane,
         error_to_raise,
     ) -> None:
-        """
-        Validate that ticket row and seat numbers are within
-        airplane's seating configuration.
-        """
-        for ticket_attr_value, ticket_attr_name, airplane_attr_name in [
-            (row, "row", "rows"),
-            (seat, "seat", "seats_in_row"),
-        ]:
-            count_attrs = getattr(airplane, airplane_attr_name)
-            if not (1 <= ticket_attr_value <= count_attrs):
+        """Validate that seat position exists within airplane's configuration."""
+        validations = [
+            (row, airplane.rows, "row"),
+            (seat, airplane.seats_in_row, "seat"),
+        ]
+
+        for value, max_value, field_name in validations:
+            if not 1 <= value <= max_value:
                 raise error_to_raise(
                     {
-                        ticket_attr_name: (
-                            f"{ticket_attr_name} number must be in available range: "
-                            f"(1, {airplane_attr_name}): (1, {count_attrs})"
+                        field_name.lower(): (
+                            f"{field_name} must be between 1 and {max_value}."
                         )
                     }
                 )
 
     def clean(self) -> None:
-        self.validate_ticket(self.row, self.seat, self.flight.airplane, ValidationError)
+        """Validate ticket creation constraints."""
+        self.validate_ticket_position(
+            self.row, self.seat, self.flight.airplane, ValidationError
+        )
 
-        if self.flight.departure_time <= timezone.now():
-            raise ValidationError({"flight": "Cannot create ticket for past flights"})
+        now = timezone.now()
+        if self.flight.departure_time <= now:
+            raise ValidationError(
+                {"flight": "Cannot create ticket. Flight has already departed"}
+            )
+
+        minimum_time_before_departure = timedelta(minutes=10)
+        if self.flight.departure_time <= now + minimum_time_before_departure:
+            raise ValidationError(
+                {
+                    "flight": (
+                        "Warning: Flight departs in less than "
+                        f"{minimum_time_before_departure} minutes. "
+                        "You not have enough time to board."
+                    )
+                }
+            )
 
     def __str__(self) -> str:
         return (
             f"{self.flight.route.source.closest_big_city} → "
             f"{self.flight.route.destination.closest_big_city} "
-            f"(Departure at {self.flight.departure_time.strftime("%Y.%m.%d %H:%M")}): "
-            f"seat {self.row}-{self.seat}"
+            f"(Departure at {self.flight.departure_time.strftime('%Y.%m.%d %H:%M')}): "
+            f"seat {self.seat_number}"
         )
