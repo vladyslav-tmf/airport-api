@@ -9,8 +9,8 @@ from base.models import TimestampedUUIDBaseModel
 
 
 class Airport(TimestampedUUIDBaseModel):
-    name = models.CharField(max_length=255, unique=True)
-    closest_big_city = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True, db_index=True)
+    closest_big_city = models.CharField(max_length=255, db_index=True)
 
     class Meta:
         ordering = ("name",)
@@ -20,7 +20,7 @@ class Airport(TimestampedUUIDBaseModel):
 
 
 class AirplaneType(TimestampedUUIDBaseModel):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, db_index=True)
 
     class Meta:
         ordering = ("name",)
@@ -30,7 +30,7 @@ class AirplaneType(TimestampedUUIDBaseModel):
 
 
 class Airplane(TimestampedUUIDBaseModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, db_index=True)
     rows = models.PositiveSmallIntegerField()
     seats_in_row = models.PositiveSmallIntegerField()
     airplane_type = models.ForeignKey(
@@ -57,8 +57,8 @@ class Airplane(TimestampedUUIDBaseModel):
 
 
 class Crew(TimestampedUUIDBaseModel):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, db_index=True)
+    last_name = models.CharField(max_length=255, db_index=True)
 
     @property
     def full_name(self) -> str:
