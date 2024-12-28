@@ -137,11 +137,11 @@ class RouteSerializer(serializers.ModelSerializer):
         """
         if attrs["source"] == attrs["destination"]:
             raise serializers.ValidationError(
-                {"destination": "Source and destination airports cannot be the same"}
+                {"destination": "Source and destination airports cannot be the same."}
             )
         if attrs["distance"] > 20000:
             raise serializers.ValidationError(
-                {"distance": "Distance cannot exceed 20,000 km"}
+                {"distance": "Distance cannot exceed 20,000 km."}
             )
         return attrs
 
@@ -187,7 +187,12 @@ class FlightSerializer(serializers.ModelSerializer):
         """Validate that arrival time is after departure time."""
         if attrs["arrival_time"] <= attrs["departure_time"]:
             raise serializers.ValidationError(
-                {"arrival_time": "Arrival time must be after departure time"}
+                {"arrival_time": "Arrival time must be after departure time."}
+            )
+
+        if attrs["departure_time"] < timezone.now():
+            raise serializers.ValidationError(
+                {"departure_time": "Departure time cannot be in the past."}
             )
         return attrs
 
@@ -269,7 +274,7 @@ class TicketSerializer(serializers.ModelSerializer):
         now = timezone.now()
         if attrs["flight"].departure_time <= now:
             raise serializers.ValidationError(
-                {"flight": "Cannot create ticket. Flight has already departed"}
+                {"flight": "Cannot create ticket. Flight has already departed."}
             )
 
         minimum_time_before_departure = timedelta(minutes=10)

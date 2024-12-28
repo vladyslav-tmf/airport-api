@@ -77,12 +77,19 @@ class Crew(TimestampedUUIDBaseModel):
 
 class Route(TimestampedUUIDBaseModel):
     source = models.ForeignKey(
-        Airport, on_delete=models.CASCADE, related_name="source_routes"
+        Airport, on_delete=models.CASCADE,
+        related_name="source_routes",
+        db_index=True,
     )
     destination = models.ForeignKey(
-        Airport, on_delete=models.CASCADE, related_name="destination_routes"
+        Airport, on_delete=models.CASCADE,
+        related_name="destination_routes",
+        db_index=True,
     )
-    distance = models.PositiveSmallIntegerField(help_text="Distance in kilometers")
+    distance = models.PositiveSmallIntegerField(
+        help_text="Distance in kilometers.",
+        db_index=True,
+    )
 
     class Meta:
         ordering = ("source", "destination")
@@ -96,23 +103,25 @@ class Route(TimestampedUUIDBaseModel):
     def clean(self) -> None:
         if self.source == self.destination:
             raise ValidationError(
-                {"destination": "Source and destination airports cannot be the same"}
+                {"destination": "Source and destination airports cannot be the same."}
             )
 
         if self.distance > 20000:
-            raise ValidationError({"distance": "Distance cannot exceed 20,000 km"})
+            raise ValidationError({"distance": "Distance cannot exceed 20,000 km."})
 
     def __str__(self) -> str:
         return f"{self.source.name} → {self.destination.name} ({self.distance} km)"
 
 
 class Flight(TimestampedUUIDBaseModel):
-    route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name="flights")
-    airplane = models.ForeignKey(
-        Airplane, on_delete=models.CASCADE, related_name="flights"
+    route = models.ForeignKey(
+        Route, on_delete=models.CASCADE, related_name="flights", db_index=True
     )
-    departure_time = models.DateTimeField()
-    arrival_time = models.DateTimeField()
+    airplane = models.ForeignKey(
+        Airplane, on_delete=models.CASCADE, related_name="flights", db_index=True
+    )
+    departure_time = models.DateTimeField(db_index=True)
+    arrival_time = models.DateTimeField(db_index=True)
     crew = models.ManyToManyField(Crew, related_name="flights")
 
     @property
@@ -126,7 +135,12 @@ class Flight(TimestampedUUIDBaseModel):
     def clean(self) -> None:
         if self.arrival_time <= self.departure_time:
             raise ValidationError(
-                {"arrival_time": "Arrival time must be after departure time"}
+                {"arrival_time": "Arrival time must be after departure time."}
+            )
+
+        if self.departure_time < timezone.now():
+            raise ValidationError(
+                {"departure_time": "Departure time cannot be in the past."}
             )
 
     def __str__(self) -> str:
@@ -151,10 +165,14 @@ class Order(TimestampedUUIDBaseModel):
 
 
 class Ticket(TimestampedUUIDBaseModel):
-    row = models.PositiveSmallIntegerField()
-    seat = models.PositiveSmallIntegerField()
-    flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="tickets")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="tickets")
+    row = models.PositiveSmallIntegerField(db_index=True)
+    seat = models.PositiveSmallIntegerField(db_index=True)
+    flight = models.ForeignKey(
+        Flight, on_delete=models.CASCADE, related_name="tickets", db_index=True
+    )
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="tickets", db_index=True
+    )
 
     @property
     def seat_number(self) -> str:
@@ -202,7 +220,7 @@ class Ticket(TimestampedUUIDBaseModel):
         now = timezone.now()
         if self.flight.departure_time <= now:
             raise ValidationError(
-                {"flight": "Cannot create ticket. Flight has already departed"}
+                {"flight": "Cannot create ticket. Flight has already departed."}
             )
 
         minimum_time_before_departure = timedelta(minutes=10)
