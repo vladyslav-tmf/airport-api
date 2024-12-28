@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from accounts.tests.fixtures import DEFAULT_USER_DATA, INVALID_USER_DATA
 
 User = get_user_model()
 
@@ -14,12 +15,7 @@ class PublicUserApiTests(TestCase):
 
     def setUp(self) -> None:
         self.client = APIClient()
-        self.user_data = {
-            "email": "test@test.com",
-            "password": "testpass123",
-            "first_name": "Test",
-            "last_name": "User",
-        }
+        self.user_data = self.user_data = DEFAULT_USER_DATA.copy()
 
     def test_create_user_success(self) -> None:
         """Test creating a user is successful."""
@@ -74,6 +70,19 @@ class PublicUserApiTests(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_user_invalid_data_variations(self) -> None:
+        """Test user creation with various invalid data combinations."""
+        for test_case, invalid_data in INVALID_USER_DATA.items():
+            response = self.client.post(
+                reverse("accounts:user-create"),
+                invalid_data,
+            )
+            self.assertEqual(
+                response.status_code,
+                status.HTTP_400_BAD_REQUEST,
+                f"Failed for test case: {test_case}",
+            )
+
     def test_obtain_token_success(self) -> None:
         """Test obtaining token for valid credentials."""
         User.objects.create_user(**self.user_data)
@@ -105,6 +114,35 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertNotIn("access", response.data)
         self.assertNotIn("refresh", response.data)
+
+    def test_obtain_token_missing_fields(self) -> None:
+        """Test token obtain with missing fields."""
+        User.objects.create_user(**self.user_data)
+
+        response = self.client.post(
+            reverse("accounts:token-obtain-pair"),
+            {"password": self.user_data["password"]},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self.client.post(
+            reverse("accounts:token-obtain-pair"),
+            {"email": self.user_data["email"]},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_user_duplicate_email_case_insensitive(self) -> None:
+        """Test user creation with same email but different case."""
+        User.objects.create_user(**self.user_data)
+
+        upper_email_data = self.user_data.copy()
+        upper_email_data["email"] = self.user_data["email"].upper()
+
+        response = self.client.post(
+            reverse("accounts:user-create"),
+            upper_email_data,
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_protected_endpoint_unauthorized(self) -> None:
         """Test accessing protected endpoint without authentication."""

@@ -77,12 +77,14 @@ class Crew(TimestampedUUIDBaseModel):
 
 class Route(TimestampedUUIDBaseModel):
     source = models.ForeignKey(
-        Airport, on_delete=models.CASCADE,
+        Airport,
+        on_delete=models.CASCADE,
         related_name="source_routes",
         db_index=True,
     )
     destination = models.ForeignKey(
-        Airport, on_delete=models.CASCADE,
+        Airport,
+        on_delete=models.CASCADE,
         related_name="destination_routes",
         db_index=True,
     )

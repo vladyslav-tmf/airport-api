@@ -15,7 +15,11 @@ from rest_framework_simplejwt.views import (
 )
 
 from accounts.serializers import UserSerializer
-from airport.api_schema import SERVER_ERROR_500_RESPONSE, UNAUTHORIZED_401_RESPONSE, VALIDATION_400_RESPONSE
+from airport.api_schema import (
+    SERVER_ERROR_500_RESPONSE,
+    UNAUTHORIZED_401_RESPONSE,
+    VALIDATION_400_RESPONSE,
+)
 
 User = get_user_model()
 

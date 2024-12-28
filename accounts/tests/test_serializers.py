@@ -2,17 +2,13 @@ from django.test import TestCase
 from rest_framework.exceptions import ValidationError
 
 from accounts.serializers import UserSerializer
+from accounts.tests.fixtures import DEFAULT_USER_DATA, INVALID_USER_DATA
 
 
 class UserSerializerTests(TestCase):
     def setUp(self) -> None:
         """Set up test data."""
-        self.user_data = {
-            "email": "test@test.com",
-            "password": "testpass123",
-            "first_name": "Test",
-            "last_name": "User",
-        }
+        self.user_data = DEFAULT_USER_DATA.copy()
         self.serializer = UserSerializer(data=self.user_data)
         self.assertTrue(self.serializer.is_valid())
 
@@ -32,7 +28,7 @@ class UserSerializerTests(TestCase):
 
     def test_password_validation(self) -> None:
         """Test password validation."""
-        data = self.user_data.copy()
+        data = self.user_data
         data["password"] = "test"
         serializer = UserSerializer(data=data)
 
@@ -95,7 +91,7 @@ class UserSerializerTests(TestCase):
 
     def test_read_only_fields(self) -> None:
         """Test read-only fields cannot be set."""
-        data = self.user_data.copy()
+        data = self.user_data
         data["is_staff"] = True
         serializer = UserSerializer(data=data)
 
@@ -105,7 +101,7 @@ class UserSerializerTests(TestCase):
 
     def test_email_validation(self) -> None:
         """Test email validation."""
-        data = self.user_data.copy()
+        data = self.user_data
         data["email"] = "invalid-email"
         serializer = UserSerializer(data=data)
 
@@ -120,7 +116,7 @@ class UserSerializerTests(TestCase):
 
     def test_name_fields_validation(self) -> None:
         """Test first_name and last_name validation."""
-        data = self.user_data.copy()
+        data = self.user_data
         data["first_name"] = ""
         serializer = UserSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -131,7 +127,7 @@ class UserSerializerTests(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn("first_name", serializer.errors)
 
-        data = self.user_data.copy()
+        data = self.user_data
         data["last_name"] = ""
         serializer = UserSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -147,7 +143,7 @@ class UserSerializerTests(TestCase):
         required_fields = ("email", "password", "first_name", "last_name")
 
         for field in required_fields:
-            data = self.user_data.copy()
+            data = self.user_data
             data[field] = None
             serializer = UserSerializer(data=data)
             self.assertFalse(serializer.is_valid())
@@ -157,7 +153,7 @@ class UserSerializerTests(TestCase):
         """Test email uniqueness validation on update."""
         user1 = self.serializer.save()
 
-        data = self.user_data.copy()
+        data = self.user_data
         data["email"] = "other@test.com"
         user2 = UserSerializer(data=data)
         self.assertTrue(user2.is_valid())
@@ -167,3 +163,58 @@ class UserSerializerTests(TestCase):
         serializer = UserSerializer(user2, data=update_data, partial=True)
         self.assertFalse(serializer.is_valid())
         self.assertIn("email", serializer.errors)
+
+    def test_invalid_email_formats(self) -> None:
+        """Test various invalid email formats."""
+        invalid_emails = [
+            "plainaddress",
+            "@missinguser.com",
+            "missing@domain",
+            "spaces in@email.com",
+            "test@test@test.com",
+            "test.@test.com",
+            ".test@test.com",
+            "test..test@test.com",
+            "test@test..com",
+        ]
+
+        for email in invalid_emails:
+            data = self.user_data
+            data["email"] = email
+            serializer = UserSerializer(data=data)
+            self.assertFalse(serializer.is_valid())
+            self.assertIn("email", serializer.errors)
+
+    def test_special_characters_in_names(self) -> None:
+        """Test validation of special characters in name fields."""
+        data = INVALID_USER_DATA["special_chars_name"]
+        serializer = UserSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("first_name", serializer.errors)
+        self.assertIn("last_name", serializer.errors)
+
+    def test_whitespace_only_names(self) -> None:
+        """Test names containing only whitespace."""
+        data = self.user_data
+        data["first_name"] = "   "
+        data["last_name"] = "   "
+        serializer = UserSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("first_name", serializer.errors)
+        self.assertIn("last_name", serializer.errors)
+
+    def test_password_common_patterns(self) -> None:
+        """Test rejection of common password patterns."""
+        common_patterns = [
+            "qwerty123",
+            "abc12345",
+            "test1234",
+            self.user_data["email"].split("@")[0] + "123",
+        ]
+
+        for password in common_patterns:
+            data = self.user_data
+            data["password"] = password
+            serializer = UserSerializer(data=data)
+            self.assertFalse(serializer.is_valid())
+            self.assertIn("password", serializer.errors)

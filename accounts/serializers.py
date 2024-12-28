@@ -21,6 +21,34 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "email", "first_name", "last_name", "password", "is_staff")
         read_only_fields = ("id", "is_staff")
 
+    def validate_email(self, value: str) -> str:
+        """Validate email field."""
+        email = value.lower()
+
+        if User.objects.filter(email__iexact=email).exists():
+            if self.instance and self.instance.email.lower() == email:
+                return value
+            raise serializers.ValidationError(
+                {"email": "User with this email already exists."}
+            )
+        return value
+
+    def validate_first_name(self, value: str) -> str:
+        """Validate first_name field."""
+        if not value.isalpha():
+            raise serializers.ValidationError(
+                {"first_name": "First name should only contain letters."}
+            )
+        return value.strip()
+
+    def validate_last_name(self, value: str) -> str:
+        """Validate last_name field."""
+        if not value.isalpha():
+            raise serializers.ValidationError(
+                {"last_name": "Last name should only contain letters."}
+            )
+        return value.strip()
+
     def create(self, validated_data: dict):
         """Create a new user with encrypted password and return it."""
         return User.objects.create_user(**validated_data)
