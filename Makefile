@@ -24,4 +24,4 @@ load: ## Load initial data
 	python manage.py loaddata airport_api_sample_data.json
 
 .PHONY: setup
-setup: install migrate superuser ## Complete project setup
+setup: install migrate run ## Complete project setup

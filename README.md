@@ -12,6 +12,7 @@ Global Flight Tracking System - RESTful API service for real-time flight monitor
   - [Docker Setup](#docker-setup)
 - [Environment Variables](#-environment-variables)
 - [API Documentation](#-api-documentation)
+- [Makefile Commands](#-makefile-commands)
 - [Database Structure](#-database-structure)
 - [Testing](#-testing)
 - [Troubleshooting](#-troubleshooting)
@@ -62,6 +63,7 @@ Airport API is a comprehensive flight management system that provides functional
 - **Redis**
 - **Docker & Docker Compose**
 - **Poetry (dependency management)**
+- **Make**
 - **JWT Authentication**
 - **Swagger/OpenAPI Documentation**
 
@@ -137,6 +139,11 @@ Follow these steps to set up and run the project locally:
    # Or alternatively:
    make run
    ```
+The application will be available at:
+- API: http://localhost:8000/api/v1/
+- Admin panel: http://localhost:8000/admin/
+- API Documentation (swagger): http://localhost:8000/api/v1/docs/swagger/
+- API Documentation (redoc): http://localhost:8000/api/v1/docs/redoc/
 
 ### Docker Setup
 
@@ -165,7 +172,8 @@ Follow these steps to set up and run the project locally:
 The application will be available at:
 - API: http://localhost:8000/api/v1/
 - Admin panel: http://localhost:8000/admin/
-- API Documentation: http://localhost:8000/api/v1/docs/swagger/
+- API Documentation (swagger): http://localhost:8000/api/v1/docs/swagger/
+- API Documentation (redoc): http://localhost:8000/api/v1/docs/redoc/
 - pgAdmin: http://localhost:5050/
 - RedisInsight: http://localhost:5540/
 
@@ -179,7 +187,7 @@ POSTGRES_HOST=db
 POSTGRES_PORT=5432
 POSTGRES_DB=airport_db
 POSTGRES_USER=airport_user
-POSTGRES_PASSWORD=strong-password
+POSTGRES_PASSWORD=strong_password
 
 # pgAdmin settings
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
@@ -189,17 +197,30 @@ PGADMIN_DEFAULT_PASSWORD=admin
 
 ## 📚 API Documentation
 
-The API documentation is available in Swagger UI format at `/api/v1/docs/swagger/` when the server is running. It provides detailed information about:
+The API documentation is available in Swagger UI format at `/api/v1/docs/swagger/` and Redoc format at `/api/v1/docs/redoc/` when the server is running. It provides detailed information about:
 
 - Available endpoints
 - Request/Response formats
 - Authentication methods
 - API parameters
 
+## 📦 Makefile Commands
+
+The Makefile provides a set of commands for common tasks, such as running the server, applying database migrations, and loading sample data.
+
+- `make install`: Install dependencies
+- `make migrate`: Apply database migrations
+- `make run`: Run the development server
+- `make superuser`: Create superuser
+- `make test`: Run tests
+- `make load`: Load sample data
+- `make setup`: Complete project setup
+
 ## 🗄 Database Structure
 
-The project uses PostgreSQL and includes the following main models:
+The project uses SQLite for local development and PostgreSQL for Docker setup, and includes the following main models:
 
+- **User**: Manages user accounts
 - **Airport**: Stores airport information
 - **AirplaneType**: Defines different types of aircraft
 - **Airplane**: Contains specific airplane details
@@ -234,7 +255,6 @@ docker-compose exec app make test
 
 2. **Redis connection issues**
    - Verify Redis service is running
-   - Check Redis connection string in .env file
 
 ## 📝 API Examples
 
