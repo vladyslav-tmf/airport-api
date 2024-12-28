@@ -3,19 +3,19 @@
 Global Flight Tracking System - RESTful API service for real-time flight monitoring and airport data management worldwide.
 
 ## 📋 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [System Requirements](#system-requirements)
-- [Installation](#installation)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [System Requirements](#-system-requirements)
+- [Installation](#-installation)
   - [Local Setup](#local-setup)
   - [Docker Setup](#docker-setup)
-- [Environment Variables](#environment-variables)
-- [API Documentation](#api-documentation)
-- [Database Structure](#database-structure)
-- [Testing](#testing)
-- [Troubleshooting](#troubleshooting)
-- [API Examples](#api-examples)
+- [Environment Variables](#-environment-variables)
+- [API Documentation](#-api-documentation)
+- [Database Structure](#-database-structure)
+- [Testing](#-testing)
+- [Troubleshooting](#-troubleshooting)
+- [API Examples](#-api-examples)
 
 ## 🌐 Overview
 
