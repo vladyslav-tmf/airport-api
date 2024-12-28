@@ -37,10 +37,6 @@ RUN pip install --no-cache-dir poetry && \
     poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi --no-root
 
-# Copy and set up entrypoint script.
-COPY entrypoint.sh /app/
-RUN chmod +x /app/entrypoint.sh
-
 # Copy the source code into the container.
 COPY . /app/
 
@@ -57,6 +53,7 @@ RUN adduser \
     django-user
 
 RUN mkdir -p /app/media \
+    && chmod +x /app/entrypoint.sh \
     && chown -R django-user:django-user /app \
     && chmod -R 755 /app/media
 
@@ -67,5 +64,5 @@ USER django-user
 EXPOSE 8000
 
 # Run the application.
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
