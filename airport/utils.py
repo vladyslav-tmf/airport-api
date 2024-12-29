@@ -4,7 +4,7 @@ from pathlib import Path
 from django.utils.text import slugify
 
 
-def airplane_image_file_path(instance: "Airplane", filename: str) -> Path:
+def airplane_image_file_path(instance: "Airplane", filename: str) -> Path:  # noqa: F821
     """
     Generate unique file path for airplane image uploads.
 
