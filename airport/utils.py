@@ -3,8 +3,6 @@ from pathlib import Path
 
 from django.utils.text import slugify
 
-from models import Airplane
-
 
 def airplane_image_file_path(instance: "Airplane", filename: str) -> Path:
     """
