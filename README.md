@@ -65,7 +65,7 @@ Airport API is a comprehensive flight management system that provides functional
 - **Poetry (dependency management)**
 - **Make**
 - **JWT Authentication**
-- **Swagger/OpenAPI Documentation**
+- **Swagger/Redoc Documentation**
 
 ## 💻 System Requirements
 
@@ -192,6 +192,9 @@ POSTGRES_PASSWORD=strong_password
 # pgAdmin settings
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=admin
+
+# Django settings
+SECRET_KEY=secret_key
 
 ```
 
