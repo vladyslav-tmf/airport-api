@@ -1,0 +1,483 @@
+[
+{
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$2FlUBqigrMR5JrIJ1ijFaW$JnuqJswsaGkY/bLhx2hmZlls0cheyA6l2LKywgZMz/g=",
+        "last_login": "2024-12-18T13:29:38.821Z",
+        "is_superuser": true,
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-12-18T12:33:26.572Z",
+        "email": "admin@admin.com",
+        "first_name": "Admin",
+        "last_name": "User",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$j969TWZvzYIA8gHHyyHsOe$jylE4HKTs33zQpxB9bQ7ggqR4M0pL6lb3yDcVngIUCg=",
+        "last_login": null,
+        "is_superuser": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T12:39:55.550Z",
+        "email": "john@doe.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$nhuxn3bkBf9WzZRcVYnfni$Lv3AkTIdJztbC4EKP6tXX8/gq8sjc+rGy5Q+8iu3Pdc=",
+        "last_login": null,
+        "is_superuser": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T12:40:07.383Z",
+        "email": "mary@smith.com",
+        "first_name": "Mary",
+        "last_name": "Smith",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$SrlVDfWPSX2r3nlBsPl8T5$GLtrbBepm/vhDtd2Igw6K0CnBdmuORfF+D4+NaYd2pA=",
+        "last_login": null,
+        "is_superuser": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T12:40:20.654Z",
+        "email": "david@johnson.com",
+        "first_name": "David",
+        "last_name": "Johnson",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$B18N6WEWhfcX4uf1etq2zM$spZE79timm1DZCi9Ghy/rxbNgaj7xioGHiFLga559k0=",
+        "last_login": null,
+        "is_superuser": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T12:40:32Z",
+        "email": "sarah@wilson.com",
+        "first_name": "Sarah",
+        "last_name": "Wilson",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "airport.airport",
+    "pk": "3533ffe7-280e-4d66-8e97-579b4f106a7b",
+    "fields": {
+        "created_at": "2024-12-18T12:34:19.981Z",
+        "updated_at": "2024-12-18T12:34:19.981Z",
+        "name": "John F. Kennedy International Airport",
+        "closest_big_city": "New York"
+    }
+},
+{
+    "model": "airport.airport",
+    "pk": "438e7a9c-9bfa-4c68-97d7-e0c7a2dcc04c",
+    "fields": {
+        "created_at": "2024-12-18T12:34:07.930Z",
+        "updated_at": "2024-12-18T12:34:07.930Z",
+        "name": "Heathrow Airport",
+        "closest_big_city": "London"
+    }
+},
+{
+    "model": "airport.airport",
+    "pk": "5c93bf63-2a41-42ef-9758-f80c06565c42",
+    "fields": {
+        "created_at": "2024-12-18T12:34:00.899Z",
+        "updated_at": "2024-12-18T12:34:00.899Z",
+        "name": "Boryspil International Airport",
+        "closest_big_city": "Kyiv"
+    }
+},
+{
+    "model": "airport.airport",
+    "pk": "70b312ca-40f0-4622-a7fb-c47930dcb9ba",
+    "fields": {
+        "created_at": "2024-12-18T12:34:25.477Z",
+        "updated_at": "2024-12-18T12:34:25.477Z",
+        "name": "Dubai International Airport",
+        "closest_big_city": "Dubai"
+    }
+},
+{
+    "model": "airport.airport",
+    "pk": "8ad1dba8-c6b3-494e-9c12-a196b22e35fc",
+    "fields": {
+        "created_at": "2024-12-18T12:34:15.205Z",
+        "updated_at": "2024-12-18T12:34:15.205Z",
+        "name": "Charles de Gaulle Airport",
+        "closest_big_city": "Paris"
+    }
+},
+{
+    "model": "airport.airplanetype",
+    "pk": "2a60ab68-ecac-4f87-a0ef-1c3b3580aff6",
+    "fields": {
+        "created_at": "2024-12-18T12:34:49.332Z",
+        "updated_at": "2024-12-18T12:34:49.332Z",
+        "name": "Boeing 787"
+    }
+},
+{
+    "model": "airport.airplanetype",
+    "pk": "2c4863dc-7140-4bc2-a26f-ecca7e472538",
+    "fields": {
+        "created_at": "2024-12-18T12:34:34.800Z",
+        "updated_at": "2024-12-18T12:34:34.800Z",
+        "name": "Boeing 737"
+    }
+},
+{
+    "model": "airport.airplanetype",
+    "pk": "b8469385-ea2d-4259-aa3c-76d689e44f64",
+    "fields": {
+        "created_at": "2024-12-18T12:34:41.341Z",
+        "updated_at": "2024-12-18T12:34:41.341Z",
+        "name": "Boeing 777"
+    }
+},
+{
+    "model": "airport.airplanetype",
+    "pk": "e0a985a2-3d9e-4e2d-be95-947193b93bd0",
+    "fields": {
+        "created_at": "2024-12-18T12:34:44.622Z",
+        "updated_at": "2024-12-18T12:34:44.622Z",
+        "name": "Airbus A380"
+    }
+},
+{
+    "model": "airport.airplanetype",
+    "pk": "f663fa0c-db28-44fd-93dc-1e57a98d2a81",
+    "fields": {
+        "created_at": "2024-12-18T12:34:37.862Z",
+        "updated_at": "2024-12-18T12:34:37.862Z",
+        "name": "Airbus A320"
+    }
+},
+{
+    "model": "airport.airplane",
+    "pk": "2866bdd7-0bea-4776-acde-ac44ef99407a",
+    "fields": {
+        "created_at": "2024-12-18T12:35:14.133Z",
+        "updated_at": "2024-12-18T12:35:14.133Z",
+        "name": "UR-PSB",
+        "rows": 28,
+        "seats_in_row": 6,
+        "airplane_type": "e0a985a2-3d9e-4e2d-be95-947193b93bd0",
+        "image": ""
+    }
+},
+{
+    "model": "airport.airplane",
+    "pk": "ba54fc64-2750-4d50-a1d0-be448fa71428",
+    "fields": {
+        "created_at": "2024-12-18T12:35:33.313Z",
+        "updated_at": "2024-12-18T13:54:26.504Z",
+        "name": "UR-PSD",
+        "rows": 50,
+        "seats_in_row": 10,
+        "airplane_type": "b8469385-ea2d-4259-aa3c-76d689e44f64",
+        "image": "uploads/airplanes/ur-psd-50c51fa8-c87b-447c-bc3f-99da3ea46cd0.jpg"
+    }
+},
+{
+    "model": "airport.airplane",
+    "pk": "d246909c-1d02-468c-b4de-a3b1e3d16073",
+    "fields": {
+        "created_at": "2024-12-18T12:35:23.388Z",
+        "updated_at": "2024-12-18T12:35:23.388Z",
+        "name": "UR-PSC",
+        "rows": 40,
+        "seats_in_row": 9,
+        "airplane_type": "2c4863dc-7140-4bc2-a26f-ecca7e472538",
+        "image": ""
+    }
+},
+{
+    "model": "airport.airplane",
+    "pk": "e17141c0-8fc3-4fb1-b5bd-d6cae2c2e130",
+    "fields": {
+        "created_at": "2024-12-18T12:35:06.124Z",
+        "updated_at": "2024-12-18T12:35:06.124Z",
+        "name": "UR-PSA",
+        "rows": 30,
+        "seats_in_row": 6,
+        "airplane_type": "f663fa0c-db28-44fd-93dc-1e57a98d2a81",
+        "image": ""
+    }
+},
+{
+    "model": "airport.airplane",
+    "pk": "f35d2c9e-3bc7-4326-8fc8-799b40ab0b53",
+    "fields": {
+        "created_at": "2024-12-18T12:35:45.598Z",
+        "updated_at": "2024-12-18T12:35:45.598Z",
+        "name": "UR-PSE",
+        "rows": 35,
+        "seats_in_row": 8,
+        "airplane_type": "2a60ab68-ecac-4f87-a0ef-1c3b3580aff6",
+        "image": ""
+    }
+},
+{
+    "model": "airport.crew",
+    "pk": "00354874-1f0f-46d2-8bf2-9e6defc05e0d",
+    "fields": {
+        "created_at": "2024-12-18T12:36:01.652Z",
+        "updated_at": "2024-12-18T12:36:01.652Z",
+        "first_name": "Michael",
+        "last_name": "Johnson"
+    }
+},
+{
+    "model": "airport.crew",
+    "pk": "15bee367-813b-4d9f-87cd-a43ecd792ca5",
+    "fields": {
+        "created_at": "2024-12-18T12:36:18.094Z",
+        "updated_at": "2024-12-18T12:36:18.094Z",
+        "first_name": "Emily",
+        "last_name": "Davis"
+    }
+},
+{
+    "model": "airport.crew",
+    "pk": "289bdd19-e6e0-4fa7-81bc-b454a2681efc",
+    "fields": {
+        "created_at": "2024-12-18T12:36:13.215Z",
+        "updated_at": "2024-12-18T12:36:13.215Z",
+        "first_name": "Robert",
+        "last_name": "Brown"
+    }
+},
+{
+    "model": "airport.crew",
+    "pk": "f6d2b4f9-ee58-4f82-8b8e-bd4fec09b472",
+    "fields": {
+        "created_at": "2024-12-18T12:36:08.216Z",
+        "updated_at": "2024-12-18T12:36:08.216Z",
+        "first_name": "Sarah",
+        "last_name": "Williams"
+    }
+},
+{
+    "model": "airport.crew",
+    "pk": "f9650e66-4d05-44e2-b627-f8451ebe2923",
+    "fields": {
+        "created_at": "2024-12-18T12:36:23.626Z",
+        "updated_at": "2024-12-18T12:36:23.626Z",
+        "first_name": "James",
+        "last_name": "Wilson"
+    }
+},
+{
+    "model": "airport.route",
+    "pk": "00001fc9-92b7-4214-958d-1341d2d29f40",
+    "fields": {
+        "created_at": "2024-12-18T12:36:52.517Z",
+        "updated_at": "2024-12-18T12:36:52.517Z",
+        "source": "5c93bf63-2a41-42ef-9758-f80c06565c42",
+        "destination": "438e7a9c-9bfa-4c68-97d7-e0c7a2dcc04c",
+        "distance": 2000
+    }
+},
+{
+    "model": "airport.route",
+    "pk": "6b1f5a1c-4636-4b78-90e7-774ba6241b68",
+    "fields": {
+        "created_at": "2024-12-18T12:37:17.947Z",
+        "updated_at": "2024-12-18T12:37:17.947Z",
+        "source": "8ad1dba8-c6b3-494e-9c12-a196b22e35fc",
+        "destination": "3533ffe7-280e-4d66-8e97-579b4f106a7b",
+        "distance": 5800
+    }
+},
+{
+    "model": "airport.route",
+    "pk": "bca9ca29-2fb0-4ca7-a231-740dd55f8401",
+    "fields": {
+        "created_at": "2024-12-18T12:37:06.052Z",
+        "updated_at": "2024-12-18T12:37:06.052Z",
+        "source": "438e7a9c-9bfa-4c68-97d7-e0c7a2dcc04c",
+        "destination": "8ad1dba8-c6b3-494e-9c12-a196b22e35fc",
+        "distance": 350
+    }
+},
+{
+    "model": "airport.route",
+    "pk": "d1b0fcbc-6e81-4210-9b69-0034ee508daa",
+    "fields": {
+        "created_at": "2024-12-18T12:37:36.272Z",
+        "updated_at": "2024-12-18T12:37:36.272Z",
+        "source": "3533ffe7-280e-4d66-8e97-579b4f106a7b",
+        "destination": "70b312ca-40f0-4622-a7fb-c47930dcb9ba",
+        "distance": 11000
+    }
+},
+{
+    "model": "airport.route",
+    "pk": "e2d62657-f394-4c36-b379-fcaeea3140a6",
+    "fields": {
+        "created_at": "2024-12-18T12:37:44.035Z",
+        "updated_at": "2024-12-18T12:37:44.035Z",
+        "source": "70b312ca-40f0-4622-a7fb-c47930dcb9ba",
+        "destination": "5c93bf63-2a41-42ef-9758-f80c06565c42",
+        "distance": 5500
+    }
+},
+{
+    "model": "airport.flight",
+    "pk": "3de50353-6ce6-42d4-ba5f-5ef28a7cf5c7",
+    "fields": {
+        "created_at": "2024-12-18T12:39:02.858Z",
+        "updated_at": "2024-12-18T12:39:02.858Z",
+        "route": "6b1f5a1c-4636-4b78-90e7-774ba6241b68",
+        "airplane": "2866bdd7-0bea-4776-acde-ac44ef99407a",
+        "departure_time": "2025-12-18T12:38:50Z",
+        "arrival_time": "2025-12-19T12:38:54Z",
+        "crew": [
+            "00354874-1f0f-46d2-8bf2-9e6defc05e0d",
+            "f6d2b4f9-ee58-4f82-8b8e-bd4fec09b472"
+        ]
+    }
+},
+{
+    "model": "airport.flight",
+    "pk": "7e7630f7-2508-48f9-988f-68a97679d1a7",
+    "fields": {
+        "created_at": "2024-12-18T12:39:15.788Z",
+        "updated_at": "2024-12-18T12:39:15.788Z",
+        "route": "e2d62657-f394-4c36-b379-fcaeea3140a6",
+        "airplane": "d246909c-1d02-468c-b4de-a3b1e3d16073",
+        "departure_time": "2025-12-18T12:39:09Z",
+        "arrival_time": "2025-12-19T12:39:13Z",
+        "crew": [
+            "f9650e66-4d05-44e2-b627-f8451ebe2923"
+        ]
+    }
+},
+{
+    "model": "airport.flight",
+    "pk": "84c933f0-c84f-4a9f-9e82-f29cbeceb01e",
+    "fields": {
+        "created_at": "2024-12-18T12:38:42.015Z",
+        "updated_at": "2024-12-18T12:38:42.015Z",
+        "route": "00001fc9-92b7-4214-958d-1341d2d29f40",
+        "airplane": "e17141c0-8fc3-4fb1-b5bd-d6cae2c2e130",
+        "departure_time": "2025-12-18T12:38:19Z",
+        "arrival_time": "2025-12-19T12:38:28Z",
+        "crew": [
+            "289bdd19-e6e0-4fa7-81bc-b454a2681efc",
+            "15bee367-813b-4d9f-87cd-a43ecd792ca5"
+        ]
+    }
+},
+{
+    "model": "airport.order",
+    "pk": "baa56cd9-95e1-4593-8b12-49361ed2f440",
+    "fields": {
+        "created_at": "2024-12-18T13:09:33.678Z",
+        "updated_at": "2024-12-18T13:09:33.678Z",
+        "user": 1
+    }
+},
+{
+    "model": "airport.order",
+    "pk": "bd6ee2c6-8145-43ab-8564-36d96a4ffa68",
+    "fields": {
+        "created_at": "2024-12-18T13:09:59.422Z",
+        "updated_at": "2024-12-18T13:09:59.422Z",
+        "user": 2
+    }
+},
+{
+    "model": "airport.order",
+    "pk": "d0ef4b1d-6539-4694-8037-44e6f7d03190",
+    "fields": {
+        "created_at": "2024-12-18T13:10:03.320Z",
+        "updated_at": "2024-12-18T13:10:03.320Z",
+        "user": 3
+    }
+},
+{
+    "model": "airport.order",
+    "pk": "f7dd2ed3-2bdf-4a77-a49d-713d4159e1a3",
+    "fields": {
+        "created_at": "2024-12-18T13:10:01.603Z",
+        "updated_at": "2024-12-18T13:10:01.603Z",
+        "user": 4
+    }
+},
+{
+    "model": "airport.ticket",
+    "pk": "2cf91e7b-8192-4ee4-822b-0e84990ab79d",
+    "fields": {
+        "created_at": "2024-12-18T13:17:40.696Z",
+        "updated_at": "2024-12-18T13:17:40.696Z",
+        "row": 1,
+        "seat": 1,
+        "flight": "84c933f0-c84f-4a9f-9e82-f29cbeceb01e",
+        "order": "baa56cd9-95e1-4593-8b12-49361ed2f440"
+    }
+},
+{
+    "model": "airport.ticket",
+    "pk": "7ea19c11-cfdc-4170-88a7-8783e5f2156c",
+    "fields": {
+        "created_at": "2024-12-18T13:18:01.240Z",
+        "updated_at": "2024-12-18T13:18:01.240Z",
+        "row": 1,
+        "seat": 2,
+        "flight": "3de50353-6ce6-42d4-ba5f-5ef28a7cf5c7",
+        "order": "bd6ee2c6-8145-43ab-8564-36d96a4ffa68"
+    }
+},
+{
+    "model": "airport.ticket",
+    "pk": "aae9d5b9-f5b4-4d18-8fa7-3b636d29c49f",
+    "fields": {
+        "created_at": "2024-12-18T13:18:23.117Z",
+        "updated_at": "2024-12-18T13:18:23.117Z",
+        "row": 4,
+        "seat": 6,
+        "flight": "84c933f0-c84f-4a9f-9e82-f29cbeceb01e",
+        "order": "d0ef4b1d-6539-4694-8037-44e6f7d03190"
+    }
+},
+{
+    "model": "airport.ticket",
+    "pk": "c0de3be9-d87c-42bd-b39d-a470a2712543",
+    "fields": {
+        "created_at": "2024-12-18T13:18:06.682Z",
+        "updated_at": "2024-12-18T13:18:06.682Z",
+        "row": 2,
+        "seat": 2,
+        "flight": "7e7630f7-2508-48f9-988f-68a97679d1a7",
+        "order": "f7dd2ed3-2bdf-4a77-a49d-713d4159e1a3"
+    }
+}
+]
